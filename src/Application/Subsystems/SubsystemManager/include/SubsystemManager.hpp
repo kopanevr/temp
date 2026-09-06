@@ -4,13 +4,17 @@
  * @details Для добавления подсистемы в список менеджера стоит воспользоваться @ref ADD_SUBSYSTEM.
  */
 
-#include <array>
+#pragma once
 
 //
 
 #include <cstddef>
 #include <cassert>
 #include <cstdlib>
+
+//
+
+#include <array>
 
 //
 
@@ -37,8 +41,7 @@
 //
 
 /// @brief Менеджер подсистем.
-class SubsystemManager final : public Subsystem
-{
+class SubsystemManager final : public Subsystem {
 private:
     /// @brief Количество подсистем.
     /// @details
@@ -65,8 +68,7 @@ private:
     friend class Application;
 
     /// @brief Инициализация подсистемы.
-    void init() override
-    {
+    void init() override {
         subsystemHandle.id = Subsys::SubsystemId::SubsystemManager;
         subsystemHandle.name = "Manager";
     }
@@ -76,10 +78,8 @@ public:
     static SubsystemManager& getInstance() { return *instance; }
 
     /// @brief Настройка перед запуском подсистемы.
-    void setBeforeStartUp() override
-    {
-        for (const auto& item : subsystems)
-        {
+    void setBeforeStartUp() override {
+        for (const auto& item : subsystems) {
             item->startUp();
         }
     }
@@ -94,15 +94,11 @@ public:
     }
 
     /// @brief Тело основного цикла.
-    int processBody() override
-    {
-        DEBUG("Подсистема", subsystemHandle.name, "запущена");
-
-        while (true)
-        {
-            for (const auto& item : subsystems)
-            {
-                if (item->process() == -1) return -1;
+    int processBody() override {
+        DEBUG("Подсистема ", subsystemHandle.name, " запущена");
+        while (true) {
+            for (const auto& item : subsystems) {
+                if (item->process()) return 1;
             }
         }
         return 0;
@@ -115,10 +111,8 @@ public:
     /// @brief Возвращает подсистему по идентификатору.
     /// @param id Идентификатор.
     /// @return Указатель на подсистему.
-    constexpr Subsystem* getSubsystemById(const Subsys::SubsystemId id) const
-    {
-        for (const auto& item : subsystems)
-        {
+    constexpr Subsystem* getSubsystemById(const Subsys::SubsystemId id) const {
+        for (const auto& item : subsystems) {
             if (item->getId() == id) return item;
         }
         return nullptr;

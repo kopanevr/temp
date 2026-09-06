@@ -7,8 +7,6 @@
 
 //
 
-//
-
 #include <iostream>
 #include <mutex>
 #include <utility>
@@ -17,7 +15,6 @@
 
 #include "Subsystem.hpp"
 #include "SubsystemId.hpp"
-
 
 //
 
@@ -86,8 +83,6 @@ public:
 //
 
 #define LOG(...) Logger::getInstance()->log(__VA_ARGS__)
-
-//
 
 #ifndef NDEBUG
 #   define DEBUG(...) LOG("[ОТЛАДКА]" __VA_OPT__(,) __VA_ARGS__)
