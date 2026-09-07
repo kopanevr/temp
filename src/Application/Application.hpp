@@ -1,9 +1,11 @@
 /**
  * @file
- * @brief Содержит описание приложения.
+ * @brief Описание приложения.
  */
 
 #pragma once
+
+//
 
 #include <memory>
 
@@ -29,19 +31,18 @@
 
 //
 
-namespace app {
 /// @brief Приложение.
 class Application final {
 private:
   /// @brief Контекст приложения.
-  std::unique_ptr<app::ApplicationContext> applicationContext;
+  std::unique_ptr<app::ApplicationContext> applicationContext_;
   /// @brief Интерпретатор команд.
-  std::unique_ptr<CommandLineInterpreter> commandLineInterpreter;
+  std::unique_ptr<CommandLineInterpreter> commandLineInterpreter_;
   /// @brief Менеджер подсистем.
-  std::unique_ptr<SubsystemManager> SubsysManager;
+  std::unique_ptr<SubsystemManager> subsystemManager_;
 
   /// @brief Менеджер таймера.
-  TimerManager timerManager;
+  TimerManager timerManager_;
 private:
   /// @brief Конструктор.
   Application() = default;
@@ -58,8 +59,8 @@ private:
 public:
   /// @brief
   static Application* getInstance() {
-      static Application instance{};
-      return &instance;
+    static Application instance{};
+    return &instance;
   }
 
   /// @brief Инициализация.
@@ -75,4 +76,3 @@ public:
   /// @return Результат выполнения.
   int exec();
 };
-} // namespace app

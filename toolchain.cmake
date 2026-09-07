@@ -1,7 +1,7 @@
 set(
-    CMAKE_CXX_FLAGS
-    " \
-    -fno-rtti \
-    -fno-exceptions \
-    "
+  CMAKE_CXX_FLAGS
+  " \
+  -fno-rtti \
+  -fno-exceptions \
+  "
 )

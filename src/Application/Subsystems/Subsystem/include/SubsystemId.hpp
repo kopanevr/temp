@@ -6,17 +6,14 @@
 
 //
 
-namespace Subsys
-{
-    /// @brief Идентификаторы подсистем.
-    enum class SubsystemId : uint8_t
-    {
-        SubsystemManager,
+namespace Subsys {
+/// @brief Идентификаторы подсистем.
+enum class SubsystemId : uint8_t {
+  SubsystemManager,
 
-        //
-        Logger,
-        //
+  Logger,
+  EventDispatcher,
 
-        Count
-    };
+  Count
+};
 }

@@ -38,36 +38,36 @@ using bitSubfield_t = uint64_t;
 /// @param expectedSize Ожидаемый размер в байт.
 /// @param listOfBitSubfield Список флагов-состояний или битовых подполей.
 #define BIT_FIELD(id, expectedSize, listOfBitSubfield) \
-    struct __attribute__((packed)) \
-    { \
-        listOfBitSubfield \
-    } \
-    MAKE_BIT_FIELD_NAME(id); \
-    static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
+  struct __attribute__((packed)) \
+  { \
+      listOfBitSubfield \
+  } \
+  MAKE_BIT_FIELD_NAME(id); \
+  static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
 
 /// @brief Статическое битовое поле с ожидаемым размером.
 /// @param id Идентификатор.
 /// @param expectedSize Ожидаемый размер в байт.
 /// @param listOfBitSubfield Список флагов-состояний или битовых подполей.
 #define STATIC_BIT_FIELD(id, expectedSize, listOfBitSubfield) \
-    static struct __attribute__((packed)) \
-    { \
-        listOfBitSubfield \
-    } \
-    MAKE_BIT_FIELD_NAME(id); \
-    static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
+  static struct __attribute__((packed)) \
+  { \
+      listOfBitSubfield \
+  } \
+  MAKE_BIT_FIELD_NAME(id); \
+  static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
 
 /// @brief Константное битовое поле с ожидаемым размером.
 /// @param id Идентификатор.
 /// @param expectedSize Ожидаемый размер в байт.
 /// @param listOfBitSubfield Список флагов-состояний или битовых подполей.
 #define CONST_BIT_FIELD(id, expectedSize, listOfBitSubfield) \
-    const struct __attribute__((packed)) \
-    { \
-        listOfBitSubfield \
-    } \
-    MAKE_BIT_FIELD_NAME(id); \
-    static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
+  const struct __attribute__((packed)) \
+  { \
+      listOfBitSubfield \
+  } \
+  MAKE_BIT_FIELD_NAME(id); \
+  static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
 
 //
 
@@ -78,20 +78,20 @@ using bitSubfield_t = uint64_t;
 /// @brief Устанавливает 1 во все биты битового поля по идентификатору.
 /// @param id Идентификатор.
 #define SET_BIT_FIELD(id) \
-    std::memset( \
-        static_cast<void*>(&GET_BIT_FIELD_NAME(id)), \
-        0xFF /* 0b11111111 */, \
-        sizeof(GET_BIT_FIELD_NAME(id)) \
-    )
+  std::memset( \
+      static_cast<void*>(&GET_BIT_FIELD_NAME(id)), \
+      0xFF /* 0b11111111 */, \
+      sizeof(GET_BIT_FIELD_NAME(id)) \
+  )
 
 /// @brief Стирает битовое поле по идентификатору.
 /// @param id Идентификатор.
 #define ERASE_BIT_FIELD(id) \
-    std::memset( \
-        static_cast<void*>(&GET_BIT_FIELD_NAME(id)), \
-        0, \
-        sizeof(GET_BIT_FIELD_NAME(id)) \
-    )
+  std::memset( \
+      static_cast<void*>(&GET_BIT_FIELD_NAME(id)), \
+      0, \
+      sizeof(GET_BIT_FIELD_NAME(id)) \
+  )
 
 /// @brief Устанавливает флаг.
 #define SET_FLAG(id, flag) GET_BIT_FIELD_NAME(id).flag = 1

@@ -6,7 +6,7 @@
 
 //
 
-CommandLineInterpreter* CommandLineInterpreter::instance = {};
+CommandLineInterpreter* CommandLineInterpreter::instance_ = {};
 
 //
 
@@ -16,35 +16,32 @@ CommandLineInterpreter* CommandLineInterpreter::instance = {};
 /// @param argv Указатель на список аргументов.
 void CommandLineInterpreter::bodyProcess(int argc, char* argv[])
 {
-    int opt = {};
+  int opt = {};
 
-    const char* shortopts = ":hp:v";
+  const char* shortopts = ":hp:v";
 
-    bool status = {};
+  bool status = {};
 
-    while ((opt = getopt(argc, argv, shortopts)) != -1)
+  while ((opt = getopt(argc, argv, shortopts)) != -1) {
+    switch (opt)
     {
-        switch (opt)
-        {
-        case 'h':
-            break;
-        case 'p':
-            // Установка пути к директории.
-
-            args.pathToModelDirectory = optarg;
-
-            status = true;
-            break;
-        case 'v':
-            break;
-        case '?':
-            break;
-        case ':':
-            break;
-        default:
-            break;
-        }
+    case 'h':
+      break;
+    case 'p':
+      // Установка пути к директории.
+      args_.pathToModelDirectory = optarg;
+      status = true;
+      break;
+    case 'v':
+      break;
+    case '?':
+      break;
+    case ':':
+      break;
+    default:
+      break;
+    }
     }
 
-    isSuccessfullyParsed = status;
+    isSuccessfullyParsed_ = status;
 }

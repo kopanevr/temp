@@ -9,58 +9,58 @@
 
 //
 
+/// @brief Аргументы.
+struct CommandLineArgs final {
+  /// @brief Путь к директории модели.
+  char* pathToModelDirectory;
+};
+
+//
+
 /// @brief Интерпретатор команд.
-class CommandLineInterpreter final
-{
-private:
-    /// @brief Указатель на экземпляр.
-    static CommandLineInterpreter* instance;
-
-    /// @brief Аргументы.
-    struct CommandLineArgs final
-    {
-        /// @brief Путь к директории модели.
-        char* pathToModelDirectory;
-    }
-    args;
-
-    /// @brief Состояние обработки команд.
-    bool isSuccessfullyParsed : 1;
-private:
-    /// @brief Конструктор.
-    /// @param argc Количество аргументов.
-    /// @param argv Указатель на список аргументов.
-    CommandLineInterpreter(int argc, char* argv[])
-    {
-        process(argc, argv);
-    }
-
-    /// @brief Дружественный класс.
-    friend class Application;
-
-    /// @brief Тело процесса.
-    /// @param argc Количество аргументов.
-    /// @param argv Указатель на список аргументов.
-    void bodyProcess(int argc, char* argv[]);
-
-    /// @brief Процесс.
-    void process(int argc, char* argv[])
-    {
-        bodyProcess(argc, argv);
-    }
+class CommandLineInterpreter final {
 public:
-    /// @brief Деструктор.
-    ~CommandLineInterpreter() = default;
+  /// @brief Деструктор.
+  ~CommandLineInterpreter() = default;
 
-    /// @brief
-    /// @return
-    static CommandLineInterpreter& getInstance() { return *instance; }
+  /// @brief
+  /// @return
+  static CommandLineInterpreter& getInstance() { return *instance_; }
 
-    /// @brief Возвращает ссылку на аргументы.
-    /// @return Ссылка на аргументы.
-    const CommandLineArgs& getArgs() const { return args; }
+  /// @brief Возвращает ссылку на аргументы.
+  /// @return Ссылка на аргументы.
+  const CommandLineArgs& getArgs() const { return args_; }
 
-    /// @brief
-    /// @return
-    bool isParsed() const { return isSuccessfullyParsed; }
+  /// @brief
+  /// @return
+  bool isParsed() const { return isSuccessfullyParsed_; }
+private:
+  /// @brief Конструктор.
+  /// @param argc Количество аргументов.
+  /// @param argv Указатель на список аргументов.
+  CommandLineInterpreter(int argc, char* argv[]) {
+    process(argc, argv);
+  }
+
+  /// @brief Дружественный класс.
+  friend class Application;
+
+  /// @brief Тело процесса.
+  /// @param argc Количество аргументов.
+  /// @param argv Указатель на список аргументов.
+  void bodyProcess(int argc, char* argv[]);
+
+  /// @brief Процесс.
+  void process(int argc, char* argv[]) {
+    bodyProcess(argc, argv);
+  }
+private:
+  /// @brief Указатель на экземпляр.
+  static CommandLineInterpreter* instance_;
+
+  /// @brief Аргументы.
+  CommandLineArgs args_;
+
+  /// @brief Состояние обработки команд.
+  bool isSuccessfullyParsed_ : 1;
 };
