@@ -1,4 +1,4 @@
-#include "CommandLineInterpreter.hpp"
+#include "CommandInterpreter.hpp"
 
 //
 
@@ -6,7 +6,7 @@
 
 //
 
-CommandLineInterpreter* CommandLineInterpreter::instance_ = {};
+CommandInterpreter* CommandInterpreter::instance_ = {};
 
 //
 
@@ -14,7 +14,7 @@ CommandLineInterpreter* CommandLineInterpreter::instance_ = {};
 /// @details
 /// @param argc Количество аргументов.
 /// @param argv Указатель на список аргументов.
-void CommandLineInterpreter::bodyProcess(int argc, char* argv[])
+void CommandInterpreter::bodyProcess(int argc, char* argv[])
 {
   int opt = {};
 
@@ -28,8 +28,6 @@ void CommandLineInterpreter::bodyProcess(int argc, char* argv[])
     case 'h':
       break;
     case 'p':
-      // Установка пути к директории.
-      args_.pathToModelDirectory = optarg;
       status = true;
       break;
     case 'v':

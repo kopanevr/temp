@@ -11,21 +11,19 @@
 
 /// @brief Аргументы.
 struct CommandLineArgs final {
-  /// @brief Путь к директории модели.
-  char* pathToModelDirectory;
 };
 
 //
 
 /// @brief Интерпретатор команд.
-class CommandLineInterpreter final {
+class CommandInterpreter final {
 public:
   /// @brief Деструктор.
-  ~CommandLineInterpreter() = default;
+  ~CommandInterpreter() = default;
 
   /// @brief
   /// @return
-  static CommandLineInterpreter& getInstance() { return *instance_; }
+  static CommandInterpreter& getInstance() { return *instance_; }
 
   /// @brief Возвращает ссылку на аргументы.
   /// @return Ссылка на аргументы.
@@ -38,7 +36,7 @@ private:
   /// @brief Конструктор.
   /// @param argc Количество аргументов.
   /// @param argv Указатель на список аргументов.
-  CommandLineInterpreter(int argc, char* argv[]) {
+  CommandInterpreter(int argc, char* argv[]) {
     process(argc, argv);
   }
 
@@ -56,7 +54,7 @@ private:
   }
 private:
   /// @brief Указатель на экземпляр.
-  static CommandLineInterpreter* instance_;
+  static CommandInterpreter* instance_;
 
   /// @brief Аргументы.
   CommandLineArgs args_;

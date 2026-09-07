@@ -1,7 +1,7 @@
 add_executable(
   Application
   Application.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/CommandLineInterpreter/src/CommandLineInterpreter.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/CommandInterpreter/src/CommandInterpreter.cpp
   main.cpp
 )
 
@@ -12,7 +12,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/SubsystemManager
 target_include_directories(
   Application PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/ApplicationContext/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/CommandLineInterpreter/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/CommandInterpreter/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Subsystems/SubsystemManager/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BitField/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/TimerManager/include

@@ -7,15 +7,15 @@
 
 //
 
-#include <cstdint>
-#include <cstddef>
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 
 //
 
-#include <variant>
 #include <array>
 #include <mutex>
+#include <variant>
 
 //
 
@@ -28,7 +28,7 @@
 //
 
 using EventID = uint32_t;
-using VariantPayload = std::variant<int,float>;
+using VariantPayload = std::variant<int, float>;
 
 //
 
@@ -43,7 +43,7 @@ class EventDispatcher final : public Subsystem {
 public:
   ~EventDispatcher() = default;
 
-  static EventDispatcher* getInstance() {
+  static EventDispatcher *getInstance() {
     static EventDispatcher instance{};
     return &instance;
   }
@@ -57,11 +57,21 @@ public:
   /// @brief
   void unsubscribe();
 
-  /// @brief
+  /// @brief Публикует событие.
+  /// @details Вызывается из любых потоков.
   /// @param id Идентификатор события.
   /// @param payload Нагрузка события.
-  /// @return
-  bool postEvent(const EventID id, const VariantPayload payload);
+  bool postEvent(const EventID id, const VariantPayload payload) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (eventCount_ >= BUFFER_SIZE) {
+      assert(false);
+      return false;
+    }
+    (*writeBuffer_)[eventCount_] = {id, payload};
+    eventCount_++;
+    return true;
+  }
+
 private:
   /// @brief Конструктор.
   EventDispatcher() {
@@ -84,19 +94,18 @@ private:
   /// @details Вызывается в главном потоке один раз за итерацию.
   void consumeEvents();
   /// @brief
-  void processEvents(const Event& event);
+  void processEvents(const Event &event);
 
   /// @brief Тело процесса.
-  void processBody() override {
-    consumeEvents();
-  }
+  void processBody() override { consumeEvents(); }
+
 private:
   static constexpr size_t BUFFER_SIZE = 1024UL;
   std::array<Event, BUFFER_SIZE> bufferA_;
   std::array<Event, BUFFER_SIZE> bufferB_;
 
-  std::array<Event, BUFFER_SIZE>* writeBuffer_ = &bufferA_;
-  std::array<Event, BUFFER_SIZE>* readBuffer_ = &bufferB_;
+  std::array<Event, BUFFER_SIZE> *writeBuffer_ = &bufferA_;
+  std::array<Event, BUFFER_SIZE> *readBuffer_ = &bufferB_;
 
   std::mutex mutex_;
 

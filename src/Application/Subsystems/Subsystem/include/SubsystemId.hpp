@@ -16,4 +16,4 @@ enum class SubsystemId : uint8_t {
 
   Count
 };
-}
+} // namespace Subsys

@@ -17,8 +17,7 @@
 
 namespace app {
 /// @brief
-struct ApplicationContext final
-{
+struct ApplicationContext final {
   /// @brief Время запуска.
   std::chrono::steady_clock::time_point startTime;
   /// @brief Период времени выполнения.

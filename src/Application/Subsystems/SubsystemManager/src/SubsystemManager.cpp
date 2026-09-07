@@ -2,4 +2,4 @@
 
 //
 
-SubsystemManager* SubsystemManager::instance_ = {};
+SubsystemManager *SubsystemManager::instance_ = {};

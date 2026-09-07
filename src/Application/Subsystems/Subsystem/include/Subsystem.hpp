@@ -32,19 +32,6 @@ struct SubsystemHandle {
 
 /// @brief Подсистема.
 class Subsystem {
-private:
-protected:
-  /// @brief Дескриптор подсистемы.
-  SubsystemHandle subsystemHandle;
-protected:
-  /// @brief Инициализация подсистемы.
-  virtual void init() = 0;
-  /// @brief
-  virtual void setBeforeStartUp() = 0;
-  /// @brief
-  virtual void setBeforeShutDown() = 0;
-  /// @brief Тело основного цикла.
-  virtual void processBody() = 0;
 public:
   /// @brief Конструктор.
   Subsystem() = default;
@@ -76,4 +63,17 @@ public:
   void process() {
     processBody();
   }
+protected:
+  /// @brief Дескриптор подсистемы.
+  SubsystemHandle subsystemHandle;
+protected:
+  /// @brief Инициализация подсистемы.
+  virtual void init() = 0;
+  /// @brief
+  virtual void setBeforeStartUp() = 0;
+  /// @brief
+  virtual void setBeforeShutDown() = 0;
+  /// @brief Тело основного цикла.
+  virtual void processBody() = 0;
+private:
 };

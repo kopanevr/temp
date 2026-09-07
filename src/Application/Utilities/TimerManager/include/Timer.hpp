@@ -24,11 +24,10 @@ struct Timer final {
   std::chrono::steady_clock::time_point end{};
 
   /// @brief
-  bool isStarted : 1{false};
+  bool isStarted : 1 {false};
   /// @brief
-  bool isDurationSet : 1{false};
+  bool isDurationSet : 1 {false};
 
   /// @brief Конструктор.
-  constexpr explicit Timer(const TimerID timerId)
-    : id(timerId) {}
+  constexpr explicit Timer(const TimerID timerId) : id(timerId) {}
 };

@@ -11,7 +11,7 @@
 
 //
 
-#include "CommandLineInterpreter.hpp"
+#include "CommandInterpreter.hpp"
 
 //
 
@@ -33,16 +33,26 @@
 
 /// @brief Приложение.
 class Application final {
-private:
-  /// @brief Контекст приложения.
-  std::unique_ptr<app::ApplicationContext> applicationContext_;
-  /// @brief Интерпретатор команд.
-  std::unique_ptr<CommandLineInterpreter> commandLineInterpreter_;
-  /// @brief Менеджер подсистем.
-  std::unique_ptr<SubsystemManager> subsystemManager_;
+public:
+  /// @brief
+  static Application *getInstance() {
+    static Application instance{};
+    return &instance;
+  }
 
-  /// @brief Менеджер таймера.
-  TimerManager timerManager_;
+  /// @brief Инициализация.
+  /// @details
+  /// @param argc Количество аргументов.
+  /// @param argv Указатель на список аргументов.
+  bool init(int argc, char *argv[]);
+  /// @brief Деинициализация.
+  /// @details
+  void deinit();
+
+  /// @brief Выполнение.
+  /// @return Результат выполнения.
+  int exec();
+
 private:
   /// @brief Конструктор.
   Application() = default;
@@ -52,27 +62,19 @@ private:
   /// @details
   /// @param argc Количество аргументов.
   /// @param argv Указатель на список аргументов.
-  bool prepare(int argc, char* argv[]);
+  bool prepare(int argc, char *argv[]);
 
   /// @brief Вывод информации о приложении.
   void printInfo() const;
-public:
-  /// @brief
-  static Application* getInstance() {
-    static Application instance{};
-    return &instance;
-  }
 
-  /// @brief Инициализация.
-  /// @details
-  /// @param argc Количество аргументов.
-  /// @param argv Указатель на список аргументов.
-  bool init(int argc, char* argv[]);
-  /// @brief Деинициализация.
-  /// @details
-  void deinit();
+private:
+  /// @brief Контекст приложения.
+  std::unique_ptr<app::ApplicationContext> applicationContext_;
+  /// @brief Интерпретатор команд.
+  std::unique_ptr<CommandInterpreter> commandInterpreter_;
+  /// @brief Менеджер подсистем.
+  std::unique_ptr<SubsystemManager> subsystemManager_;
 
-  /// @brief Выполнение.
-  /// @return Результат выполнения.
-  int exec();
+  /// @brief Менеджер таймера.
+  TimerManager timerManager_;
 };

@@ -23,6 +23,7 @@ class Logger final : public Subsystem {
 private:
   /// @brief
   mutable std::mutex mutex;
+
 private:
   /// @brief Конструктор.
   Logger() {
@@ -30,8 +31,8 @@ private:
     init();
   }
 
-  Logger& operator=(const Logger&) = delete;
-  Logger(const Logger&) = delete;
+  Logger &operator=(const Logger &) = delete;
+  Logger(const Logger &) = delete;
 
   /// @brief Инициализация подсистемы.
   void init() override {
@@ -46,27 +47,26 @@ private:
 
   /// @brief Тело процесса.
   void processBody() override {}
+
 public:
   /// @brief Деструктор.
   ~Logger() = default;
 
-  static Logger* getInstance() {
+  static Logger *getInstance() {
     static Logger instance{};
     return &instance;
   }
 
   /// @brief
   /// @param args Данные для вывода.
-  template<typename... Args>
-  void log(Args&&... args) const {
+  template <typename... Args> void log(Args &&...args) const {
     printToTerminal(std::forward<Args>(args)...);
   }
 
-    /// @brief
-    /// @brief Выводит данные в терминал.
-    /// @param args Данные для вывода.
-    template<typename... Args>
-  void printToTerminal(Args&&... args) const {
+  /// @brief
+  /// @brief Выводит данные в терминал.
+  /// @param args Данные для вывода.
+  template <typename... Args> void printToTerminal(Args &&...args) const {
     std::lock_guard<std::mutex> lock(mutex);
     ((std::cout << std::forward<Args>(args)), ...);
     std::cout << std::endl;
@@ -78,13 +78,13 @@ public:
 #define LOG(...) Logger::getInstance()->log(__VA_ARGS__)
 
 #ifndef NDEBUG
-#   define DEBUG(...) LOG("[ОТЛАДКА]" __VA_OPT__(,) __VA_ARGS__)
+#define DEBUG(...) LOG("[ОТЛАДКА]" __VA_OPT__(, ) __VA_ARGS__)
 #else
-#   define DEBUG(...) ((void)0)
+#define DEBUG(...) ((void)0)
 #endif
 
-#define INFO(...) LOG("[ИНФО]" __VA_OPT__(,) __VA_ARGS__)
-#define WARNING(...) LOG("[ВНИМАНИЕ]" __VA_OPT__(,) __VA_ARGS__)
-#define ERROR(...) LOG("[ОШИБКА]" __VA_OPT__(,) __VA_ARGS__)
+#define INFO(...) LOG("[ИНФО]" __VA_OPT__(, ) __VA_ARGS__)
+#define WARNING(...) LOG("[ВНИМАНИЕ]" __VA_OPT__(, ) __VA_ARGS__)
+#define ERROR(...) LOG("[ОШИБКА]" __VA_OPT__(, ) __VA_ARGS__)
 
 #define SEPARATOR LOG("------")

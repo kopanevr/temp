@@ -3,16 +3,14 @@
 //
 
 /// @brief
-void EventDispatcher::subscribe()
-{}
+void EventDispatcher::subscribe() {}
 
 /// @brief
-void EventDispatcher::unsubscribe()
-{}
+void EventDispatcher::unsubscribe() {}
 
 /// @brief
 /// @param event Событие.
-void EventDispatcher::processEvents(const Event& event) {
+void EventDispatcher::processEvents(const Event &event) {
   switch (event.id) {
   case 0:
     break;
@@ -20,21 +18,6 @@ void EventDispatcher::processEvents(const Event& event) {
   default:
     break;
   }
-}
-
-/// @brief Публикует событие.
-/// @details Вызывается из любых потоков.
-/// @param id Идентификатор события.
-/// @param payload Нагрузка события.
-bool EventDispatcher::postEvent(const EventID id, const VariantPayload payload) {
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (eventCount_ >= BUFFER_SIZE) {
-    assert(false);
-    return false;
-  }
-  (*writeBuffer_)[eventCount_] = {id, payload};
-  eventCount_++;
-  return true;
 }
 
 /// @brief Извлекает и обрабатывает события.
