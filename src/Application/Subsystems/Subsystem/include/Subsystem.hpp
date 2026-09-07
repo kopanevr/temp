@@ -41,16 +41,18 @@ public:
 
   /// @brief Запуск подсистемы.
   void startUp() {
-      if (subsystemHandle.isStarted) return;
-      setBeforeStartUp();
-      subsystemHandle.isStarted = true;
+    if (subsystemHandle.isStarted)
+      return;
+    setBeforeStartUp();
+    subsystemHandle.isStarted = true;
   }
 
   /// @brief Остановка подсистемы.
   void shutDown() {
-      if (!subsystemHandle.isStarted) return;
-      setBeforeShutDown();
-      subsystemHandle.isStarted = false;
+    if (!subsystemHandle.isStarted)
+      return;
+    setBeforeShutDown();
+    subsystemHandle.isStarted = false;
   }
 
   /// @brief Возвращает идентификатор подсистемы.
@@ -60,12 +62,13 @@ public:
   [[nodiscard]] bool isRunning() const { return subsystemHandle.isStarted; }
 
   /// @brief Основной процесс.
-  void process() {
-    processBody();
-  }
+  /// @details Вызывается в главном потоке.
+  void process() { processBody(); }
+
 protected:
   /// @brief Дескриптор подсистемы.
   SubsystemHandle subsystemHandle;
+
 protected:
   /// @brief Инициализация подсистемы.
   virtual void init() = 0;
@@ -74,6 +77,8 @@ protected:
   /// @brief
   virtual void setBeforeShutDown() = 0;
   /// @brief Тело основного цикла.
+  /// @details Вызывается в @ref process.
   virtual void processBody() = 0;
+
 private:
 };

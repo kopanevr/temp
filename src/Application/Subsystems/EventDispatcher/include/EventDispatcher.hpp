@@ -14,6 +14,7 @@
 //
 
 #include <array>
+#include <functional>
 #include <mutex>
 #include <variant>
 
@@ -27,7 +28,7 @@
 
 //
 
-using EventID = uint32_t;
+using EventID = uint64_t;
 using VariantPayload = std::variant<int, float>;
 
 //
@@ -36,6 +37,15 @@ using VariantPayload = std::variant<int, float>;
 struct Event {
   EventID id;
   VariantPayload payload;
+};
+
+using SubscriptionID = uint64_t;
+using EventHandler = std::function<void(const Event &)>;
+
+/// @brief Подписка.
+struct Subscription {
+  SubscriptionID id;
+  EventHandler handler;
 };
 
 /// @brief
@@ -53,21 +63,22 @@ public:
   static constexpr size_t getEventBufferCapacity() { return BUFFER_SIZE; }
 
   /// @brief
-  void subscribe();
+  void subscribe(const SubscriptionID id, EventHandler handler);
   /// @brief
-  void unsubscribe();
+  void unsubscribe(const SubscriptionID id, EventHandler handler);
 
   /// @brief Публикует событие.
   /// @details Вызывается из любых потоков.
   /// @param id Идентификатор события.
   /// @param payload Нагрузка события.
+  /// @return Результат публикации.
   bool postEvent(const EventID id, const VariantPayload payload) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(postMutex_);
     if (eventCount_ >= BUFFER_SIZE) {
       assert(false);
       return false;
     }
-    (*writeBuffer_)[eventCount_] = {id, payload};
+    (*wBuffer_)[eventCount_] = {id, payload};
     eventCount_++;
     return true;
   }
@@ -104,10 +115,10 @@ private:
   std::array<Event, BUFFER_SIZE> bufferA_;
   std::array<Event, BUFFER_SIZE> bufferB_;
 
-  std::array<Event, BUFFER_SIZE> *writeBuffer_ = &bufferA_;
-  std::array<Event, BUFFER_SIZE> *readBuffer_ = &bufferB_;
+  std::array<Event, BUFFER_SIZE> *wBuffer_ = &bufferA_;
+  std::array<Event, BUFFER_SIZE> *rBuffer_ = &bufferB_;
 
-  std::mutex mutex_;
+  std::mutex postMutex_;
 
   /// @brief Количество событий.
   size_t eventCount_ = 0;
