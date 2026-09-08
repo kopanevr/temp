@@ -53,20 +53,25 @@ void EventDispatcher::unsubscribe(const SubscriptionID id) {
 /// @brief Обрабатывает события.
 /// @param event Событие.
 void EventDispatcher::processEvents(const Event &event) {
-  std::array<EventHandler, MAX_SUBSCRIPTIONS> localHandlerBuffer;
   size_t handlerCountToProcess = 0;
 
   {
     std::shared_lock<std::shared_mutex> lock(subscribeMutex_);
     handlerCountToProcess = subscriptionCount_;
-    for (size_t i = 0; i < handlerCountToProcess; i++) {
-      localHandlerBuffer[i] = subscriptionBuffer_[i].handler;
-    }
   }
 
   for (size_t i = 0; i < handlerCountToProcess; i++) {
-    if (localHandlerBuffer[i]) {
-      localHandlerBuffer[i](event);
+    EventHandler handlerToProcess;
+
+    {
+      std::shared_lock<std::shared_mutex> lock(subscribeMutex_);
+      if (i < subscriptionCount_) {
+        handlerToProcess = subscriptionBuffer_[i].handler;
+      }
+    }
+
+    if (handlerToProcess) {
+      handlerToProcess(event);
     }
   }
 }
@@ -84,7 +89,7 @@ void EventDispatcher::consumeEvents() {
     eventCountToProcess = eventCount_;
     std::swap(wEventBuffer_, rEventBuffer_);
 #ifndef NDEBUG
-    // Определение максимального количества обработанных событий за итерацию
+    // Определение максимального количества обработанных событий за итерацию.
     if (eventCount_ > maxEverEventCountToProcess_) {
       maxEverEventCountToProcess_ = eventCount_;
     }
