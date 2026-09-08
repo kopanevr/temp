@@ -14,8 +14,8 @@
 //
 
 #include <array>
-#include <functional>
 #include <mutex>
+#include <shared_mutex>
 #include <variant>
 
 //
@@ -33,6 +33,7 @@ using VariantPayload = std::variant<int, float>;
 
 //
 
+namespace eventDispatcher {
 /// @brief Событие.
 struct Event {
   EventID id;
@@ -40,7 +41,7 @@ struct Event {
 };
 
 using SubscriptionID = uint64_t;
-using EventHandler = std::function<void(const Event &)>;
+using EventHandler = void (*)(const Event &);
 
 /// @brief Подписка.
 struct Subscription {
@@ -52,6 +53,8 @@ struct Subscription {
 class EventDispatcher final : public Subsystem {
 public:
   ~EventDispatcher() = default;
+  EventDispatcher(const EventDispatcher &) = delete;
+  EventDispatcher &operator=(const EventDispatcher &) = delete;
 
   static EventDispatcher *getInstance() {
     static EventDispatcher instance{};
@@ -60,12 +63,23 @@ public:
 
   /// @brief Возвращает ёмкость буфера событий.
   /// @return Ёмкость буфера событий.
-  static constexpr size_t getEventBufferCapacity() { return BUFFER_SIZE; }
+  static constexpr size_t getEventCap() { return MAX_EVENTS; }
 
-  /// @brief
-  void subscribe(const SubscriptionID id, EventHandler handler);
-  /// @brief
-  void unsubscribe(const SubscriptionID id, EventHandler handler);
+  /// @brief Возвращает ёмкость буфера подписок.
+  /// @return Ёмкость буфера подписок.
+  static constexpr size_t getSubscriptionCap() { return MAX_SUBSCRIPTIONS; }
+
+  /// @brief Подписывает на событие.
+  /// @details Вызывается из любых потоков.
+  /// @param id Идентификатор подписки.
+  /// @warning
+  /// @param handler Обработчик подписки.
+  /// @return Результат подписки.
+  bool subscribe(const SubscriptionID id, const EventHandler handler);
+  /// @brief Отписывает от события.
+  /// @details Вызывается из любых потоков.
+  /// @param id Идентификатор подписки.
+  void unsubscribe(const SubscriptionID id);
 
   /// @brief Публикует событие.
   /// @details Вызывается из любых потоков.
@@ -74,11 +88,11 @@ public:
   /// @return Результат публикации.
   bool postEvent(const EventID id, const VariantPayload payload) {
     std::lock_guard<std::mutex> lock(postMutex_);
-    if (eventCount_ >= BUFFER_SIZE) {
+    if (eventCount_ >= MAX_EVENTS) {
       assert(false);
       return false;
     }
-    (*wBuffer_)[eventCount_] = {id, payload};
+    (*wEventBuffer_)[eventCount_] = {id, payload};
     eventCount_++;
     return true;
   }
@@ -104,22 +118,34 @@ private:
   /// @brief Извлекает и обрабатывает события.
   /// @details Вызывается в главном потоке один раз за итерацию.
   void consumeEvents();
-  /// @brief
-  void processEvents(const Event &event);
+  /// @brief Обрабатывает события.
+  /// @param event Событие.
+  [[deprecated]] void processEvents(const Event &event);
 
   /// @brief Тело процесса.
   void processBody() override { consumeEvents(); }
 
 private:
-  static constexpr size_t BUFFER_SIZE = 1024UL;
-  std::array<Event, BUFFER_SIZE> bufferA_;
-  std::array<Event, BUFFER_SIZE> bufferB_;
+  static constexpr size_t MAX_EVENTS = 128UL;
+  using Events = std::array<Event, MAX_EVENTS>;
+  Events eventBufferA_;
+  Events eventBufferB_;
 
-  std::array<Event, BUFFER_SIZE> *wBuffer_ = &bufferA_;
-  std::array<Event, BUFFER_SIZE> *rBuffer_ = &bufferB_;
+  Events *wEventBuffer_ = &eventBufferA_;
+  Events *rEventBuffer_ = &eventBufferB_;
 
+  static constexpr size_t MAX_SUBSCRIPTIONS = 128UL;
+  using Subscriptions = std::array<Subscription, MAX_SUBSCRIPTIONS>;
+  Subscriptions subscriptionBuffer_;
+
+  /// @brief
+  std::shared_mutex subscribeMutex_;
+  /// @brief
   std::mutex postMutex_;
 
   /// @brief Количество событий.
   size_t eventCount_ = 0;
+  /// @brief Количество подписок.
+  size_t subscriptionCount_ = 0;
 };
+} // namespace eventDispatcher

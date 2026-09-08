@@ -98,7 +98,7 @@ private:
     // Добавление подсистем.
     size_t i = {};
     ADD_SUBSYSTEM(Logger);
-    ADD_SUBSYSTEM(EventDispatcher);
+    ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
   }
 
   /// @brief Дружественный класс.
