@@ -80,13 +80,13 @@ public:
 #define LOG(...) logger::Logger::getInstance()->log(__VA_ARGS__)
 
 #ifndef NDEBUG
-#define DEBUG(...) LOG("[ОТЛАДКА]" __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUG(...) LOG("[ОТЛАДКА] " __VA_OPT__(, ) __VA_ARGS__)
 #else
 #define DEBUG(...) ((void)0)
 #endif
 
-#define INFO(...) LOG("[ИНФО]" __VA_OPT__(, ) __VA_ARGS__)
-#define WARNING(...) LOG("[ВНИМАНИЕ]" __VA_OPT__(, ) __VA_ARGS__)
-#define ERROR(...) LOG("[ОШИБКА]" __VA_OPT__(, ) __VA_ARGS__)
+#define INFO(...) LOG("[ИНФО] " __VA_OPT__(, ) __VA_ARGS__)
+#define WARNING(...) LOG("[ВНИМАНИЕ] " __VA_OPT__(, ) __VA_ARGS__)
+#define ERROR(...) LOG("[ОШИБКА] " __VA_OPT__(, ) __VA_ARGS__)
 
 #define SEPARATOR LOG("------")

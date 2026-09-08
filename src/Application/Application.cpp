@@ -70,7 +70,7 @@ Application::~Application() {
 /// @brief Выполнение.
 /// @return Результат выполнения.
 int Application::exec() {
-  if (!(applicationContext_->state != ApplicationContext::State::Ready))
+  if (applicationContext_->state != ApplicationContext::State::Ready)
     return EXIT_FAILURE;
 
   // Таймер для отсчета периода времени с момента запуска приложения.
@@ -109,18 +109,4 @@ void Application::deinit() {
   SubsystemManager::instance_ = nullptr;
 
   applicationContext_->state = app::ApplicationContext::State::Deinitialized;
-}
-
-/// @brief Вывод информации о приложении.
-void Application::printInfo() const {
-  LOG("Информация о приложении:");
-
-  LOG("Мажорная версия:", 0);
-  LOG("Минорная версия:", 0);
-  LOG("Номер сборки:", 0);
-
-  LOG("Дата сборки:", __DATE__);
-  LOG("Время сборки:", __TIME__);
-
-  SEPARATOR;
 }

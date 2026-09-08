@@ -66,7 +66,7 @@ public:
 
   /// @brief Тело основного цикла.
   void processBody() override {
-    DEBUG("Подсистема ", subsystemHandle.name, " запущена");
+    DEBUG("Подсистема ", subsystemHandle.name, " запущена.");
     while (true) {
       for (const auto &item : subsystems_) {
         item->process();
@@ -113,7 +113,7 @@ private:
 private:
   /// @brief Количество подсистем.
   static constexpr size_t subsystemCount_ =
-      static_cast<size_t>(Subsys::SubsystemId::Count) - 1u;
+      static_cast<size_t>(Subsys::SubsystemId::Count) - 1UL;
   /// @brief Подсистемы.
   std::array<Subsystem *, subsystemCount_> subsystems_;
 

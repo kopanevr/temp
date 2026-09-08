@@ -24,7 +24,13 @@
 
 //
 
+// Подсистемы.
+
 #include "Logger.hpp"
+
+//
+
+#include "BitField.hpp"
 
 //
 
@@ -59,6 +65,12 @@ public:
   static EventDispatcher *getInstance() {
     static EventDispatcher instance{};
     return &instance;
+  }
+
+  /// @brief
+  /// @return Идентификатор подписки.
+  [[nodiscard]] static constexpr SubscriptionID createEventUniqueID() {
+    return {};
   }
 
   /// @brief Возвращает ёмкость буфера событий.
@@ -98,7 +110,8 @@ public:
   }
 
 #ifndef NDEBUG
-  /// @brief Возвращает максимальное количество обработанных событий за итерацию.
+  /// @brief Возвращает максимальное количество обработанных событий за
+  /// итерацию.
   /// @return Максимальное количество обработанных событий за итерацию
   size_t getMaxEverEventCount() const { return maxEverEventCountToProcess_; }
 #endif
@@ -129,7 +142,16 @@ private:
   [[deprecated]] void processEvents(const Event &event);
 
   /// @brief Тело процесса.
-  void processBody() override { consumeEvents(); }
+  void processBody() override {
+#ifndef NDEBUG
+    STATIC_BIT_FIELD(0, 1, FLAG(isStarted));
+    if (!GET_FLAG_STATE(0, isStarted)) {
+      DEBUG("Подсистема ", subsystemHandle.name, " запущена.");
+      SET_FLAG(0, isStarted);
+    }
+#endif
+    consumeEvents();
+  }
 
 private:
   static constexpr size_t MAX_EVENTS = 128UL;
