@@ -18,6 +18,7 @@
 
 //
 
+namespace logger {
 /// @brief Регистратор событий.
 class Logger final : public Subsystem {
 private:
@@ -72,10 +73,11 @@ public:
     std::cout << std::endl;
   }
 };
+} // namespace logger
 
 //
 
-#define LOG(...) Logger::getInstance()->log(__VA_ARGS__)
+#define LOG(...) logger::Logger::getInstance()->log(__VA_ARGS__)
 
 #ifndef NDEBUG
 #define DEBUG(...) LOG("[ОТЛАДКА]" __VA_OPT__(, ) __VA_ARGS__)

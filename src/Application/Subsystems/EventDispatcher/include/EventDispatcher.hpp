@@ -97,6 +97,12 @@ public:
     return true;
   }
 
+#ifndef NDEBUG
+  /// @brief Возвращает максимальное количество обработанных событий за итерацию.
+  /// @return Максимальное количество обработанных событий за итерацию
+  size_t getMaxEverEventCount() const { return maxEverEventCountToProcess_; }
+#endif
+
 private:
   /// @brief Конструктор.
   EventDispatcher() {
@@ -147,5 +153,10 @@ private:
   size_t eventCount_ = 0;
   /// @brief Количество подписок.
   size_t subscriptionCount_ = 0;
+
+#ifndef NDEBUG
+  /// @brief Максимальное количество обработанных событий за итерацию.
+  size_t maxEverEventCountToProcess_ = 0;
+#endif
 };
 } // namespace eventDispatcher

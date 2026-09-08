@@ -3,5 +3,6 @@ set(
   " \
   -fno-rtti \
   -fno-exceptions \
+  -Wno-deprecated \
   "
 )

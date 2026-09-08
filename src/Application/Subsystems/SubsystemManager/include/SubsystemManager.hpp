@@ -97,7 +97,7 @@ private:
 
     // Добавление подсистем.
     size_t i = {};
-    ADD_SUBSYSTEM(Logger);
+    ADD_SUBSYSTEM(logger::Logger);
     ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
   }
 

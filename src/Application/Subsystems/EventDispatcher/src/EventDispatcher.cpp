@@ -83,6 +83,12 @@ void EventDispatcher::consumeEvents() {
     }
     eventCountToProcess = eventCount_;
     std::swap(wEventBuffer_, rEventBuffer_);
+#ifndef NDEBUG
+    // Определение максимального количества обработанных событий за итерацию
+    if (eventCount_ > maxEverEventCountToProcess_) {
+      maxEverEventCountToProcess_ = eventCount_;
+    }
+#endif
     // Сброс количества событий.
     eventCount_ = 0;
   }
