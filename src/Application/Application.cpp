@@ -26,7 +26,7 @@ bool Application::prepare(int argc, char *argv[]) {
     return false;
 
   // Создание интерпретатора команд.
-  commandInterpreter_.reset(new (std::nothrow) CommandInterpreter(argc, argv));
+  commandInterpreter_.reset(new (std::nothrow) cmd::CommandInterpreter(argc, argv));
   if (!commandInterpreter_)
     return false;
 
@@ -34,12 +34,12 @@ bool Application::prepare(int argc, char *argv[]) {
   if (!commandInterpreter_->isParsed())
     return false;
 
-  subsystemManager_.reset(new (std::nothrow) SubsystemManager());
+  subsystemManager_.reset(new (std::nothrow) subsystemManager::SubsystemManager());
   if (!subsystemManager_)
     return false;
 
-  CommandInterpreter::instance_ = commandInterpreter_.get();
-  SubsystemManager::instance_ = subsystemManager_.get();
+  cmd::CommandInterpreter::instance_ = commandInterpreter_.get();
+  subsystemManager::SubsystemManager::instance_ = subsystemManager_.get();
 
   // Запуск менеджера подсистем.
   subsystemManager_->startUp();
@@ -105,8 +105,8 @@ void Application::deinit() {
   DEBUG("Период времени выполнения приложения составил: ",
         applicationContext_->executedTime, " миллисекунд [мсек].");
 
-  CommandInterpreter::instance_ = nullptr;
-  SubsystemManager::instance_ = nullptr;
+  cmd::CommandInterpreter::instance_ = nullptr;
+  subsystemManager::SubsystemManager::instance_ = nullptr;
 
   applicationContext_->state = app::ApplicationContext::State::Deinitialized;
 }

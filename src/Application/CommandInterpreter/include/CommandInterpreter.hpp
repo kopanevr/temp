@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Содержит описание интерпретатора команд.
+ * @brief Описание интерпретатора команд.
  */
 
 //
@@ -9,10 +9,15 @@
 
 //
 
+namespace app {
+class Application;
+} // namespace app
+
+//
+
 namespace cmd {
 /// @brief Аргументы.
 struct CommandLineArgs final {};
-} // namespace cmd
 
 //
 
@@ -41,7 +46,7 @@ private:
   CommandInterpreter(int argc, char *argv[]) { process(argc, argv); }
 
   /// @brief Дружественный класс.
-  friend class Application;
+  friend class app::Application;
 
   /// @brief Тело процесса.
   /// @param argc Количество аргументов.
@@ -53,7 +58,7 @@ private:
 
 private:
   /// @brief Указатель на экземпляр.
-  static CommandInterpreter *instance_;
+  static inline CommandInterpreter *instance_;
 
   /// @brief Аргументы.
   cmd::CommandLineArgs args_;
@@ -61,3 +66,4 @@ private:
   /// @brief Состояние обработки команд.
   bool isSuccessfullyParsed_ : 1;
 };
+} // namespace cmd

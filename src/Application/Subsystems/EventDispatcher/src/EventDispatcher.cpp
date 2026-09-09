@@ -12,8 +12,7 @@ using namespace eventDispatcher;
 /// @param handler Обработчик подписки.
 /// @warning
 /// @return Результат подписки.
-bool EventDispatcher::subscribe(const SubscriptionID id,
-                                const EventHandler handler) {
+bool EventDispatcher::subscribe(const SubscriptionID id, EventHandler handler) {
   std::unique_lock<std::shared_mutex> lock(subscribeMutex_);
   if (subscriptionCount_ >= MAX_SUBSCRIPTIONS) {
     assert(false);

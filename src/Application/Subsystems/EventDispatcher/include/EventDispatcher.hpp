@@ -40,6 +40,7 @@ using VariantPayload = std::variant<int, float>;
 //
 
 namespace eventDispatcher {
+
 /// @brief Событие.
 struct Event {
   EventID id;
@@ -48,7 +49,6 @@ struct Event {
 
 using SubscriptionID = uint64_t;
 using EventHandler = void (*)(const Event &);
-
 /// @brief Подписка.
 struct Subscription {
   SubscriptionID id;
@@ -87,7 +87,7 @@ public:
   /// @warning
   /// @param handler Обработчик подписки.
   /// @return Результат подписки.
-  bool subscribe(const SubscriptionID id, const EventHandler handler);
+  bool subscribe(const SubscriptionID id, EventHandler handler);
   /// @brief Отписывает от события.
   /// @details Вызывается из любых потоков.
   /// @param id Идентификатор подписки.
@@ -125,7 +125,7 @@ private:
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    subsystemHandle.id = Subsys::SubsystemId::EventDispatcher;
+    subsystemHandle.id = subsystemManager::SubsystemId::EventDispatcher;
     subsystemHandle.name = "EventDispatcher";
   }
 

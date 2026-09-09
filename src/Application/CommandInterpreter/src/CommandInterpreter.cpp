@@ -6,7 +6,7 @@
 
 //
 
-CommandInterpreter* CommandInterpreter::instance_ = {};
+using namespace cmd;
 
 //
 
@@ -14,17 +14,15 @@ CommandInterpreter* CommandInterpreter::instance_ = {};
 /// @details
 /// @param argc Количество аргументов.
 /// @param argv Указатель на список аргументов.
-void CommandInterpreter::bodyProcess(int argc, char* argv[])
-{
+void CommandInterpreter::bodyProcess(int argc, char *argv[]) {
   int opt = {};
 
-  const char* shortopts = ":hp:v";
+  const char *shortopts = ":hp:v";
 
   bool status = {};
 
   while ((opt = getopt(argc, argv, shortopts)) != -1) {
-    switch (opt)
-    {
+    switch (opt) {
     case 'h':
       break;
     case 'p':
@@ -39,7 +37,7 @@ void CommandInterpreter::bodyProcess(int argc, char* argv[])
     default:
       break;
     }
-    }
+  }
 
-    isSuccessfullyParsed_ = status;
+  isSuccessfullyParsed_ = status;
 }

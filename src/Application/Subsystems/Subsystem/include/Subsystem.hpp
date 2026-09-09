@@ -21,7 +21,7 @@
 
 struct SubsystemHandle {
   /// @brief Идентификатор подсистемы.
-  Subsys::SubsystemId id;
+  subsystemManager::SubsystemId id;
   /// @brief Имя подсистемы.
   /// @warning
   std::string name;
@@ -56,7 +56,7 @@ public:
   }
 
   /// @brief Возвращает идентификатор подсистемы.
-  [[nodiscard]] Subsys::SubsystemId getId() const { return subsystemHandle.id; }
+  [[nodiscard]] subsystemManager::SubsystemId getId() const { return subsystemHandle.id; }
 
   /// @brief Проверка запуска подсистемы.
   [[nodiscard]] bool isRunning() const { return subsystemHandle.isStarted; }

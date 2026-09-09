@@ -31,6 +31,7 @@
 
 //
 
+namespace app {
 /// @brief Приложение.
 class Application final {
 public:
@@ -82,10 +83,11 @@ private:
   /// @brief Контекст приложения.
   std::unique_ptr<app::ApplicationContext> applicationContext_;
   /// @brief Интерпретатор команд.
-  std::unique_ptr<CommandInterpreter> commandInterpreter_;
+  std::unique_ptr<cmd::CommandInterpreter> commandInterpreter_;
   /// @brief Менеджер подсистем.
-  std::unique_ptr<SubsystemManager> subsystemManager_;
+  std::unique_ptr<subsystemManager::SubsystemManager> subsystemManager_;
 
   /// @brief Менеджер таймера.
   TimerManager timerManager_;
 };
+} // namespace app

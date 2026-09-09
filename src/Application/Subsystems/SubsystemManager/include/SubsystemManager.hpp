@@ -3,8 +3,8 @@
  * @brief Описание менеджера подсистем.
  * @details Для добавления подсистемы в список менеджера стоит воспользоваться
  * @ref ADD_SUBSYSTEM.
- * @details Порядок вызова метода @ref process подсистемы зависит от порядка
- * добавления подсистемы в список менеджера.
+ * @details Порядок вызова метода @ref process у любой подсистемы зависит от
+ * порядка добавления подсистемы в список менеджера.
  */
 
 #pragma once
@@ -33,6 +33,12 @@
 
 //
 
+namespace app {
+class Application;
+} // namespace app
+
+//
+
 /// @brief Добавляет подсистему в список менеджера подсистем.
 /// @param name Имя класса подсистемы, производного от @ref Subsystem.
 #define ADD_SUBSYSTEM(name)                                                    \
@@ -43,6 +49,7 @@
 
 //
 
+namespace subsystemManager {
 /// @brief Менеджер подсистем.
 class SubsystemManager final : public Subsystem {
 public:
@@ -81,7 +88,7 @@ public:
   /// @brief Возвращает подсистему по идентификатору.
   /// @param id Идентификатор.
   /// @return Указатель на подсистему.
-  constexpr Subsystem *getSubsystemById(const Subsys::SubsystemId id) const {
+  constexpr Subsystem *getSubsystemById(const SubsystemId id) const {
     for (const auto &item : subsystems_) {
       if (item->getId() == id)
         return item;
@@ -102,23 +109,24 @@ private:
   }
 
   /// @brief Дружественный класс.
-  friend class Application;
+  friend class app::Application;
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    subsystemHandle.id = Subsys::SubsystemId::SubsystemManager;
-    subsystemHandle.name = "Manager";
+    subsystemHandle.id = SubsystemId::SubsystemManager;
+    subsystemHandle.name = "SubsystemManager";
   }
 
 private:
   /// @brief Количество подсистем.
   static constexpr size_t subsystemCount_ =
-      static_cast<size_t>(Subsys::SubsystemId::Count) - 1UL;
+      static_cast<size_t>(SubsystemId::Count) - 1UL;
   /// @brief Подсистемы.
   std::array<Subsystem *, subsystemCount_> subsystems_;
 
   /// @brief Указатель на экземпляр.
-  static SubsystemManager *instance_;
+  static inline subsystemManager::SubsystemManager *instance_;
 };
+} // namespace subsystemManager
 
 #undef ADD_SUBSYSTEM

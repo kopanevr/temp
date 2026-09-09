@@ -6,7 +6,7 @@
 
 //
 
-namespace Subsys {
+namespace subsystemManager {
 /// @brief Идентификаторы подсистем.
 enum class SubsystemId : uint8_t {
   SubsystemManager,
@@ -16,4 +16,4 @@ enum class SubsystemId : uint8_t {
 
   Count
 };
-} // namespace Subsys
+} // namespace subsystemManager
