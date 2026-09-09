@@ -119,8 +119,7 @@ private:
 
 private:
   /// @brief Количество подсистем.
-  static constexpr size_t subsystemCount_ =
-      static_cast<size_t>(SubsystemId::Count) - 1UL;
+  static const size_t subsystemCount_ = static_cast<size_t>(SubsystemId::Count);
   /// @brief Подсистемы.
   std::array<Subsystem *, subsystemCount_> subsystems_;
 

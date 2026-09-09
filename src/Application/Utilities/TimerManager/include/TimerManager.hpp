@@ -19,6 +19,10 @@
 
 //
 
+using Duration = std::chrono::steady_clock::duration;
+
+//
+
 /// @brief Менеджер таймера.
 class TimerManager final {
 public:
@@ -50,7 +54,7 @@ public:
   /// @details Запуск таймера c установкой периода времени отсчета.
   /// @param timer Таймер.
   /// @param duration Период времени.
-  void start(Timer &timer, std::chrono::steady_clock::duration duration) {
+  void start(Timer &timer, const Duration duration) {
     timer.start = std::chrono::steady_clock::now();
     timer.end = timer.start + duration;
     timer.isStarted = true;
@@ -69,8 +73,7 @@ public:
   /// @brief Остановка таймера и возврат истекшего периода времени.
   /// @return Истекший период времени.
   /// @param timer Таймер.
-  [[nodiscard]] std::chrono::steady_clock::duration
-  stopAndGetElapsedTime(Timer &timer) {
+  [[nodiscard]] Duration stopAndGetElapsedTime(Timer &timer) {
     if (timer.isStarted) {
       timer.end = std::chrono::steady_clock::now();
       timer.isStarted = false;
@@ -123,8 +126,7 @@ public:
   /// @brief Возвращает истекший период времени.
   /// @return Истекший период времени.
   /// @param timer Таймер.
-  [[nodiscard]] std::chrono::steady_clock::duration
-  getElapsedTime(const Timer &timer) const {
+  Duration getElapsedTime(const Timer &timer) const {
     if (timer.isStarted)
       return timer.end - timer.start;
     return std::chrono::steady_clock::now() - timer.start;

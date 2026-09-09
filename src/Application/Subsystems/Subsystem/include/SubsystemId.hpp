@@ -8,8 +8,8 @@
 
 namespace subsystemManager {
 /// @brief Идентификаторы подсистем.
-enum class SubsystemId : uint8_t {
-  SubsystemManager,
+enum class SubsystemId : int8_t {
+  SubsystemManager = -1,
 
   Logger,
   EventDispatcher,
