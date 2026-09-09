@@ -5,18 +5,19 @@
 
 //
 
-#include <cstdlib>
-
-//
-
 #include "Application.hpp"
 
 //
 
+/// @brief
+/// @param argc
+/// @param argv
+/// @return
 int main(int argc, char *argv[]) {
   auto *const app = app::Application::getInstance();
-  if (!app->init(argc, argv))
-    return EXIT_FAILURE;
+  int ret = 0;
+  if (!(ret = app->init(argc, argv)))
+    return ret;
 
   return app->exec();
 }

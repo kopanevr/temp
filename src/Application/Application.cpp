@@ -51,14 +51,15 @@ bool Application::prepare(int argc, char *argv[]) {
 /// @details
 /// @param argc Количество аргументов.
 /// @param argv Указатель на список аргументов.
-bool Application::init(int argc, char *argv[]) {
+/// @return Состояние выполнения.
+int Application::init(int argc, char *argv[]) {
   if (!prepare(argc, argv)) {
     ERROR("Инициализация приложения не завершена.");
-    return false;
+    return EXIT_FAILURE;
   }
   DEBUG("Инициализация приложения завершена.");
   applicationContext_->state = ApplicationContext::State::Ready;
-  return true;
+  return EXIT_SUCCESS;
 }
 
 /// @brief Деструктор.
@@ -68,7 +69,7 @@ Application::~Application() {
 }
 
 /// @brief Выполнение.
-/// @return Результат выполнения.
+/// @return Состояние выполнения.
 int Application::exec() {
   if (applicationContext_->state != ApplicationContext::State::Ready)
     return EXIT_FAILURE;

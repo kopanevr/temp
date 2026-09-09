@@ -45,13 +45,14 @@ public:
   /// @details
   /// @param argc Количество аргументов.
   /// @param argv Указатель на список аргументов.
-  bool init(int argc, char *argv[]);
+  /// @return Состояние выполнения.
+  int init(int argc, char *argv[]);
   /// @brief Деинициализация.
   /// @details
   void deinit();
 
   /// @brief Выполнение.
-  /// @return Результат выполнения.
+  /// @return Состояние выполнения.
   int exec();
 
 private:
