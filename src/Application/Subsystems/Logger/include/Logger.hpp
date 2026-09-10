@@ -21,9 +21,29 @@
 namespace logger {
 /// @brief Регистратор событий.
 class Logger final : public Subsystem {
-private:
+public:
+  /// @brief Деструктор.
+  ~Logger() = default;
+
+  static Logger *getInstance() {
+    static Logger instance{};
+    return &instance;
+  }
+
   /// @brief
-  mutable std::mutex mutex;
+  /// @param args Данные для вывода.
+  template <typename... Args> void log(Args &&...args) const {
+    printToTerminal(std::forward<Args>(args)...);
+  }
+
+  /// @brief
+  /// @brief Выводит данные в терминал.
+  /// @param args Данные для вывода.
+  template <typename... Args> void printToTerminal(Args &&...args) const {
+    std::lock_guard<std::mutex> lock(mutex);
+    ((std::cout << std::forward<Args>(args)), ...);
+    std::cout << std::endl;
+  }
 
 private:
   /// @brief Конструктор.
@@ -49,29 +69,9 @@ private:
   /// @brief Тело процесса.
   void processBody() override {}
 
-public:
-  /// @brief Деструктор.
-  ~Logger() = default;
-
-  static Logger *getInstance() {
-    static Logger instance{};
-    return &instance;
-  }
-
+private:
   /// @brief
-  /// @param args Данные для вывода.
-  template <typename... Args> void log(Args &&...args) const {
-    printToTerminal(std::forward<Args>(args)...);
-  }
-
-  /// @brief
-  /// @brief Выводит данные в терминал.
-  /// @param args Данные для вывода.
-  template <typename... Args> void printToTerminal(Args &&...args) const {
-    std::lock_guard<std::mutex> lock(mutex);
-    ((std::cout << std::forward<Args>(args)), ...);
-    std::cout << std::endl;
-  }
+  mutable std::mutex mutex;
 };
 } // namespace logger
 

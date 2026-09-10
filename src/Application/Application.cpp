@@ -22,21 +22,27 @@ bool Application::prepare(int argc, char *argv[]) {
 
   // Создание контекста приложения.
   applicationContext_.reset(new (std::nothrow) ApplicationContext());
-  if (!applicationContext_)
+  if (!applicationContext_) {
     return false;
+  }
 
   // Создание интерпретатора команд.
-  commandInterpreter_.reset(new (std::nothrow) cmd::CommandInterpreter(argc, argv));
-  if (!commandInterpreter_)
+  commandInterpreter_.reset(new (std::nothrow)
+                                cmd::CommandInterpreter(argc, argv));
+  if (!commandInterpreter_) {
     return false;
+  }
 
   // Проверка состояния обработки аргументов.
-  if (!commandInterpreter_->isParsed())
+  if (!commandInterpreter_->isParsed()) {
     return false;
+  }
 
-  subsystemManager_.reset(new (std::nothrow) subsystemManager::SubsystemManager());
-  if (!subsystemManager_)
+  subsystemManager_.reset(new (std::nothrow)
+                              subsystemManager::SubsystemManager());
+  if (!subsystemManager_) {
     return false;
+  }
 
   cmd::CommandInterpreter::instance_ = commandInterpreter_.get();
   subsystemManager::SubsystemManager::instance_ = subsystemManager_.get();
@@ -71,8 +77,9 @@ Application::~Application() {
 /// @brief Выполнение.
 /// @return Состояние выполнения.
 int Application::exec() {
-  if (applicationContext_->state != ApplicationContext::State::Ready)
+  if (applicationContext_->state != ApplicationContext::State::Ready) {
     return EXIT_FAILURE;
+  }
 
   // Таймер для отсчета периода времени с момента запуска приложения.
   Timer timerToTimeSinceStartApplication(0u);

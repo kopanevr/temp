@@ -61,6 +61,8 @@ public:
   EventDispatcher(const EventDispatcher &) = delete;
   EventDispatcher &operator=(const EventDispatcher &) = delete;
 
+  /// @brief
+  /// @return
   static EventDispatcher *getInstance() {
     static EventDispatcher instance{};
     return &instance;

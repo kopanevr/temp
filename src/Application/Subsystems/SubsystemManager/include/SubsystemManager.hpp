@@ -30,6 +30,7 @@
 
 #include "EventDispatcher.hpp"
 #include "Logger.hpp"
+#include "temp.hpp"
 
 //
 
@@ -108,6 +109,7 @@ private:
     size_t i = 0;
     ADD_SUBSYSTEM(logger::Logger);
     ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
+    ADD_SUBSYSTEM(temp::Temp);
   }
 
   /// @brief Дружественный класс.
@@ -115,8 +117,8 @@ private:
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    subsystemHandle.id = SubsystemId::SubsystemManager;
-    subsystemHandle.name = "SubsystemManager";
+    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::SubsystemManager);
+    SET_SUBSYSTEM_NAME("Manager");
   }
 
 private:

@@ -6,7 +6,9 @@ target_include_directories(
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Subsystem/include
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Logger/include
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/EventDispatcher/include
+  ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/temp/include
 )
 
 target_link_libraries(SubsystemManager PRIVATE Logger)
 target_link_libraries(SubsystemManager PRIVATE EventDispatcher)
+target_link_libraries(SubsystemManager PRIVATE temp)

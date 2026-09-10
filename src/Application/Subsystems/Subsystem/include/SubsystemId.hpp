@@ -13,6 +13,7 @@ enum class SubsystemId : int8_t {
 
   Logger,
   EventDispatcher,
+  Temp,
 
   Count
 };

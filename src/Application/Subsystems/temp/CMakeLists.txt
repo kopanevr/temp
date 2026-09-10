@@ -1,4 +1,4 @@
-add_library(temp SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/SubsystemManager.cpp)
+add_library(temp SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/temp.cpp)
 
 target_include_directories(
   temp PUBLIC
@@ -7,4 +7,4 @@ target_include_directories(
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Logger/include
 )
 
-target_link_libraries(SubsystemManager PRIVATE Logger)
+target_link_libraries(temp PRIVATE Logger)
