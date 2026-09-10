@@ -79,6 +79,7 @@ public:
         item->process();
       }
     }
+    DEBUG("Подсистема ", subsystemHandle.name, " остановлена.");
   }
 
   /// @brief Возвращает количество подсистем.
@@ -90,8 +91,9 @@ public:
   /// @return Указатель на подсистему.
   constexpr Subsystem *getSubsystemById(const SubsystemId id) const {
     for (const auto &item : subsystems_) {
-      if (item->getId() == id)
+      if (item->getId() == id) {
         return item;
+      }
     }
     return nullptr;
   }
@@ -103,7 +105,7 @@ private:
     init();
 
     // Добавление подсистем.
-    size_t i = {};
+    size_t i = 0;
     ADD_SUBSYSTEM(logger::Logger);
     ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
   }

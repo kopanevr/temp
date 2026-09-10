@@ -108,11 +108,13 @@ public:
   /// @return Состояние завершения таймера.
   /// @param timer Таймер.
   [[nodiscard]] bool isFinished(const Timer &timer) const {
-    if (!timer.isStarted)
+    if (!timer.isStarted) {
       return true;
+    }
     // При отсутствии периода времени отсчета.
-    if (!timer.isDurationSet)
+    if (!timer.isDurationSet) {
       return false;
+    }
     return std::chrono::steady_clock::now() >= timer.end;
   }
 
@@ -127,8 +129,9 @@ public:
   /// @return Истекший период времени.
   /// @param timer Таймер.
   Duration getElapsedTime(const Timer &timer) const {
-    if (timer.isStarted)
+    if (timer.isStarted) {
       return timer.end - timer.start;
+    }
     return std::chrono::steady_clock::now() - timer.start;
   }
 };

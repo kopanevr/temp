@@ -7,15 +7,28 @@
 
 //
 
+#include <cassert>
 #include <cstdint>
 
 //
 
 #include <string>
+#include <string_view>
 
 //
 
 #include "SubsystemId.hpp"
+
+//
+
+/// @brief
+#define SET_SUBSYSTEM_ID(identifier) subsystemHandle.id = identifier
+
+/// @brief
+#define SET_SUBSYSTEM_NAME(subsystemName)                                      \
+  static_assert(std::string_view(subsystemName).size() <                       \
+                std::string{}.capacity());                                     \
+  subsystemHandle.name = subsystemName
 
 //
 
@@ -41,22 +54,26 @@ public:
 
   /// @brief Запуск подсистемы.
   void startUp() {
-    if (subsystemHandle.isStarted)
+    if (subsystemHandle.isStarted) {
       return;
+    }
     setBeforeStartUp();
     subsystemHandle.isStarted = true;
   }
 
   /// @brief Остановка подсистемы.
   void shutDown() {
-    if (!subsystemHandle.isStarted)
+    if (!subsystemHandle.isStarted) {
       return;
+    }
     setBeforeShutDown();
     subsystemHandle.isStarted = false;
   }
 
   /// @brief Возвращает идентификатор подсистемы.
-  [[nodiscard]] subsystemManager::SubsystemId getId() const { return subsystemHandle.id; }
+  [[nodiscard]] subsystemManager::SubsystemId getId() const {
+    return subsystemHandle.id;
+  }
 
   /// @brief Проверка запуска подсистемы.
   [[nodiscard]] bool isRunning() const { return subsystemHandle.isStarted; }

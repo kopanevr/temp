@@ -40,7 +40,6 @@ using VariantPayload = std::variant<int, float>;
 //
 
 namespace eventDispatcher {
-
 /// @brief Событие.
 struct Event {
   EventID id;
@@ -110,10 +109,11 @@ public:
   }
 
 #ifndef NDEBUG
-  /// @brief Возвращает максимальное количество обработанных событий за
-  /// итерацию.
-  /// @return Максимальное количество обработанных событий за итерацию
-  size_t getMaxEverEventCount() const { return maxEverEventCountToProcess_; }
+  /// @brief Возвращает максимальное количество событий за итерацию.
+  /// @return Максимальное количество событий за итерацию
+  [[maybe_unused]] size_t getMaxEverEventCount() const {
+    return maxEverEventCountToProcess_;
+  }
 #endif
 
 private:
@@ -125,8 +125,8 @@ private:
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    subsystemHandle.id = subsystemManager::SubsystemId::EventDispatcher;
-    subsystemHandle.name = "EventDispatcher";
+    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::EventDispatcher);
+    SET_SUBSYSTEM_NAME("Dispatcher");
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
@@ -177,7 +177,7 @@ private:
   size_t subscriptionCount_ = 0;
 
 #ifndef NDEBUG
-  /// @brief Максимальное количество обработанных событий за итерацию.
+  /// @brief Максимальное количество событий за итерацию.
   size_t maxEverEventCountToProcess_ = 0;
 #endif
 };

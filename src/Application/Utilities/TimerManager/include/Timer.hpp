@@ -15,13 +15,19 @@ using TimerID = uint8_t;
 
 //
 
+namespace timer {
+using TimePoint = std::chrono::steady_clock::time_point;
+} // namespace timer
+
+//
+
 /// @brief Таймер.
 struct Timer final {
   /// @brief Идентификатор таймера.
   TimerID id;
 
-  std::chrono::steady_clock::time_point start{};
-  std::chrono::steady_clock::time_point end{};
+  timer::TimePoint start{};
+  timer::TimePoint end{};
 
   /// @brief
   bool isStarted : 1 {false};

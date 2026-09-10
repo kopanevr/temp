@@ -37,8 +37,8 @@ private:
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    subsystemHandle.id = subsystemManager::SubsystemId::Logger;
-    subsystemHandle.name = "Logger";
+    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::Logger);
+    SET_SUBSYSTEM_NAME("Logger");
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
