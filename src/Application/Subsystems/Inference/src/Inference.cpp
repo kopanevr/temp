@@ -111,7 +111,50 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
 
 /// @brief Подготовка провайдера вывода.
 /// @param options Опции.
-bool Inference::prepareProvider(uint8_t options) { return true; }
+bool Inference::prepareProvider(const uint8_t options) { return true; }
+
+/// @brief Создание входных и выходных тензоров.
+/// @param
+bool Inference::createInputOutputTensors()
+{
+  // Получение информации о модели.
+  inferenceContext_->modelInfo = getModelInfo(*inferenceContext_);
+  return true;
+}
+
+#ifndef NDEBUG
+/// @brief
+#define PRINT_TENSOR_SHAPE(tensorInfo)                                         \
+  do {                                                                         \
+    LOG("Размерность:");                                                       \
+    LOG("[");                                                                  \
+    for (const auto &dim : *tensorInfo.shape) {                                \
+      dim != tensorInfo.shape->back() ? LOG(" ", dim, ",") : LOG(" ", dim);    \
+    }                                                                          \
+    LOG("]");                                                                  \
+  } while (false)
+#endif
+
+/// @brief Возвращает информацию о модели.
+/// @param inferenceContext Контекст вывода.
+/// @return Информация о модели.
+std::unique_ptr<ModelInfo> Inference::getModelInfo(const InferenceContext &inferenceContext) {
+  // Создание информации о модели
+  auto modelInfo = std::unique_ptr<ModelInfo>(new (std::nothrow) ModelInfo());
+  if (!modelInfo) {
+    return nullptr;
+  }
+
+  modelInfo->inputCount = inferenceContext_->session->GetInputCount();
+  for (std::size_t i = 0; i < modelInfo->inputCount; i++) {
+  }
+
+  modelInfo->outputCount = inferenceContext_->session->GetOutputCount();
+  for (std::size_t i = 0; i < modelInfo->outputCount; i++) {
+  }
+}
+
+#undef PRINT_TENSOR_SHAPE
 
 /// @brief
 void Inference::run() {

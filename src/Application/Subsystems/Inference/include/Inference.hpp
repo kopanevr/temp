@@ -85,7 +85,13 @@ private:
   /// @brief Подготовка провайдера вывода.
   /// @param options Опции. Дополнительно смотреть @ref inference::prepareSettings.
   bool prepareProvider([[maybe_unused]] const uint8_t options = 0);
-
+  /// @brief Создание входных и выходных тензоров.
+  /// @param
+  bool createInputOutputTensors();
+  /// @brief Возвращает информацию о модели.
+  /// @param inferenceContext Контекст вывода.
+  /// @return Информация о модели.
+  [[nodiscard]] std::unique_ptr<ModelInfo> getModelInfo(const InferenceContext &inferenceContext);
 private:
   /// @brief
   std::thread inferenceThread_;

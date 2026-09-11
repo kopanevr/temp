@@ -11,6 +11,14 @@
 //
 
 namespace inference {
+//// @brief
+struct ModelInfo {
+  /// @brief Количество входов.
+  std::size_t inputCount;
+  /// @brief Количество выходов.
+  std::size_t outputCount;
+};
+
 /// @brief Тензор.
 /// @details
 struct Tensor final {
@@ -31,6 +39,8 @@ struct InferenceContext final {
   std::unique_ptr<Ort::SessionOptions> sessionOptions;
   /// @brief Сессию.
   std::unique_ptr<Ort::Session> session;
+  /// @brief Указатель на информацию о модели.
+  std::unique_ptr<ModelInfo> modelInfo;
 
   /// @brief Входные тензоры.
   std::vector<Tensor> inputTensors;
