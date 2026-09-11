@@ -8,10 +8,13 @@
 //
 
 #include <thread>
+#include <memory>
 
 //
 
 #include "Subsystem.hpp"
+
+#include "InferenceContext.hpp"
 
 //
 
@@ -53,7 +56,7 @@ private:
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
-  void setBeforeStartUp() override {}
+  void setBeforeStartUp() override;
   /// @brief Предварительная настройка перед остановкой подсистемы.
   void setBeforeShutDown() override {}
 
@@ -69,11 +72,28 @@ private:
   /// @brief
   bool body();
 
+  /// @brief Подготовка входных тензоров.
+  bool prepareInputTensors();
+  /// @brief
+  bool inference();
+  /// @brief Подготовка выходных тензоров.
+  bool prepareOutputTensors();
+
+  /// @brief Подготовка перед запуском вывода.
+  /// @param options Опции. Дополнительно смотреть @ref inference::prepareSettings.
+  void prepareBeforeStartInference([[maybe_unused]] const uint8_t options = 0);
+  /// @brief Подготовка провайдера вывода.
+  /// @param options Опции. Дополнительно смотреть @ref inference::prepareSettings.
+  bool prepareProvider([[maybe_unused]] const uint8_t options = 0);
+
 private:
   /// @brief
   std::thread inferenceThread_;
 
   /// @brief Диспетчер событий
   eventDispatcher::EventDispatcher *eventDispatcher_;
+
+  /// @brief Контекст вывода.
+  std::unique_ptr<InferenceContext> inferenceContext_;
 };
 } // namespace inference
