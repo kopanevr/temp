@@ -99,7 +99,7 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
 
   if (prepareProvider()) {
     DEBUG("Подготовка провайдера вывода.");
-#if (1)
+#if (USER_OPTION_ENABLE_PROFILING)
     inferenceContext_->sessionOptions->EnableProfiling("");
 #endif
 

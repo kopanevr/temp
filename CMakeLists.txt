@@ -9,6 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Опции.
 
-option(USER_OPTION_ "Включить." OFF)
+option(USER_OPTION_ENABLE_PROFILING "Включить профилирование вывода." ON)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application)
