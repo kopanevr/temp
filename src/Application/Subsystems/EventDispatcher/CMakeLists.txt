@@ -7,3 +7,5 @@ target_include_directories(
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Logger/include
   ${CMAKE_SOURCE_DIR}/src/Application/Utilities/BitField/include
 )
+
+target_link_libraries(EventDispatcher PRIVATE Logger)

@@ -7,7 +7,7 @@ add_executable(
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Logger)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/EventDispatcher)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/temp)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Inference)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/SubsystemManager)
 
 target_include_directories(

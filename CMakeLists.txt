@@ -9,8 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Опции.
 
-option(USE_OPTION_ "Включить." OFF)
-
-#
+option(USER_OPTION_ "Включить." OFF)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application)

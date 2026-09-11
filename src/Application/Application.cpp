@@ -10,6 +10,8 @@ using namespace app;
 
 //
 
+using namespace cmd;
+
 /// @brief Настройка.
 /// @details
 /// @param argc Количество аргументов.
@@ -27,8 +29,7 @@ bool Application::prepare(int argc, char *argv[]) {
   }
 
   // Создание интерпретатора команд.
-  commandInterpreter_.reset(new (std::nothrow)
-                                cmd::CommandInterpreter(argc, argv));
+  commandInterpreter_.reset(new (std::nothrow) CommandInterpreter(argc, argv));
   if (!commandInterpreter_) {
     return false;
   }
@@ -38,13 +39,12 @@ bool Application::prepare(int argc, char *argv[]) {
     return false;
   }
 
-  subsystemManager_.reset(new (std::nothrow)
-                              subsystemManager::SubsystemManager());
+  subsystemManager_.reset(new (std::nothrow) subsystemManager::SubsystemManager());
   if (!subsystemManager_) {
     return false;
   }
 
-  cmd::CommandInterpreter::instance_ = commandInterpreter_.get();
+  CommandInterpreter::instance_ = commandInterpreter_.get();
   subsystemManager::SubsystemManager::instance_ = subsystemManager_.get();
 
   // Запуск менеджера подсистем.
@@ -81,22 +81,7 @@ int Application::exec() {
     return EXIT_FAILURE;
   }
 
-  // Таймер для отсчета периода времени с момента запуска приложения.
-  Timer timerToTimeSinceStartApplication(0u);
-
-  applicationContext_->state = ApplicationContext::State::Running;
-
-  // Запуск таймера и возврат времени запуска.
-  START_TIMER_FIRST_TIME_AND_GET_START_TIME(timerManager_,
-                                            timerToTimeSinceStartApplication,
-                                            applicationContext_->startTime);
-
   subsystemManager_->process();
-
-  // Остановка таймера и возврат истекшего периода времени.
-  STOP_TIMER_AND_GET_ELAPSED_TIME(timerManager_,
-                                  timerToTimeSinceStartApplication,
-                                  applicationContext_->executedTime);
 
   return EXIT_SUCCESS;
 }
@@ -113,7 +98,7 @@ void Application::deinit() {
   DEBUG("Период времени выполнения приложения составил: ",
         applicationContext_->executedTime, " миллисекунд [мсек].");
 
-  cmd::CommandInterpreter::instance_ = nullptr;
+  CommandInterpreter::instance_ = nullptr;
   subsystemManager::SubsystemManager::instance_ = nullptr;
 
   applicationContext_->state = app::ApplicationContext::State::Deinitialized;

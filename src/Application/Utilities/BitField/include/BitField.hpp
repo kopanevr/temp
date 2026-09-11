@@ -29,8 +29,8 @@ using bitSubfield_t = uint64_t;
 
 //
 
-#define MAKE_BIT_FIELD_NAME(id) birField_##id
-#define GET_BIT_FIELD_NAME(id) birField_##id
+#define MAKE_BIT_FIELD_NAME(id) bitField_##id
+#define GET_BIT_FIELD_NAME(id) bitField_##id
 
 //
 
