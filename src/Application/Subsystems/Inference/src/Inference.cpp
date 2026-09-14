@@ -141,10 +141,54 @@ bool Inference::prepareProvider(const uint8_t options) {
 
 /// @brief Создание входных и выходных тензоров.
 /// @param
-bool Inference::createInputOutputTensors()
-{
+bool Inference::createInputOutputTensors() {
   // Получение информации о модели.
   inferenceContext_->modelInfo = getModelInfo(*inferenceContext_);
+  if (!inferenceContext_->modelInfo) {
+    ERROR("Не удалось получить информацию о модели.");
+    return false;
+  }
+
+  Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+
+  // Создание входных тензоров.
+  for (size_t i = 0; i < inferenceContext_->modelInfo->inputCount; i++) {
+    Tensor tensor{};
+
+    tensor.metaData.shape = inferenceContext_->modelInfo->inputTensorsInfo.at(i).shape;
+
+    inferenceContext_->inputTensorValues.push_back(Ort::Value::CreateTensor(
+      memoryInfo,
+      static_cast<void *>(tensor.rawData.data()),
+      tensor.rawData.size(),
+      tensor.metaData.shape->data(), // Указатель на размерность тензора.
+      tensor.metaData.shape->size(), //
+      inferenceContext_->modelInfo->inputTensorsInfo.at(i).tensorElementDataType
+      )
+    );
+
+    inferenceContext_->inputTensors.push_back(std::move(tensor));
+  }
+
+  // Создание выходных тензоров.
+  for (size_t i = 0; i < inferenceContext_->modelInfo->outputCount; i++) {
+    Tensor tensor = {};
+
+    tensor.metaData.shape = inferenceContext_->modelInfo->outputTensorsInfo.at(i).shape;
+
+    inferenceContext_->outputTensorValues.push_back(Ort::Value::CreateTensor(
+      memoryInfo,
+      static_cast<void *>(tensor.rawData.data()),
+      tensor.rawData.size(),
+      tensor.metaData.shape->data(), // Указатель на размерность тензора.
+      tensor.metaData.shape->size(),
+      inferenceContext_->modelInfo->outputTensorsInfo.at(i).tensorElementDataType
+      )
+    );
+
+    inferenceContext_->outputTensors.push_back(std::move(tensor));
+  }
+
   return true;
 }
 

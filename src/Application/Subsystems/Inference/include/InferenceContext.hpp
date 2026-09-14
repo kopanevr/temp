@@ -38,6 +38,10 @@ struct ModelInfo {
 /// @details
 struct Tensor final {
   struct MetaData final {
+    /// @brief
+    Ort::MemoryInfo memoryInfo{nullptr};
+    /// @brief Указатель на размерность тензора.
+    std::shared_ptr<std::vector<int64_t>> shape;
   } metaData;
 
   /// @brief Сырые данные тензора.
