@@ -24,9 +24,9 @@ struct TensorInfo final {
 //// @brief
 struct ModelInfo {
   /// @brief Количество входов.
-  std::size_t inputCount;
+  size_t inputCount;
   /// @brief Количество выходов.
-  std::size_t outputCount;
+  size_t outputCount;
 
   /// @brief Информация о входных тензорах.
   std::vector<TensorInfo> inputTensorsInfo;
@@ -79,8 +79,11 @@ struct InferenceContext final {
   std::unique_ptr<Ort::SessionOptions> sessionOptions;
   /// @brief Сессию.
   std::unique_ptr<Ort::Session> session;
+  /// @brief
+  std::unique_ptr<Ort::RunOptions> runOptions;
   /// @brief Указатель на информацию о модели.
   std::unique_ptr<ModelInfo> modelInfo;
+
 
   /// @brief Входные тензоры.
   std::vector<Tensor> inputTensors;

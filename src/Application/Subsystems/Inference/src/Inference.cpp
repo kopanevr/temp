@@ -93,8 +93,7 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
   }
 
   // Создание окружения.
-  inferenceContext_->env.reset(
-      new (std::nothrow) Ort::Env(*inferenceContext_->threadingOptions, ORT_LOGGING_LEVEL_WARNING, "onnxInference"));
+  inferenceContext_->env.reset(new (std::nothrow) Ort::Env(*inferenceContext_->threadingOptions, ORT_LOGGING_LEVEL_WARNING, "onnxInference"));
   if (!inferenceContext_->threadingOptions) {
     return;
   }
@@ -115,11 +114,18 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
     } else {
       // Установка уровня оптимизации модели.
       inferenceContext_->sessionOptions->SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-      // Установка пути к файлу оптимизированной модели.
-      inferenceContext_->sessionOptions->SetOptimizedModelFilePath(inferenceContext_->optimizedModelPath.modelDirectoryPath);
 
-      // Создание сессии.
-      inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->modelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+      if (std::filesystem::exists(inferenceContext_->modelPath.getPathToModelFile()) ||
+          std::filesystem::is_directory(inferenceContext_->optimizedModelPath.modelDirectoryPath)) {
+        // Установка пути к файлу оптимизированной модели.
+        inferenceContext_->sessionOptions->SetOptimizedModelFilePath(inferenceContext_->optimizedModelPath.modelDirectoryPath);
+
+        // Создание сессии.
+        inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->modelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+      } else {
+        ERROR("Ошибка при создании сессии.");
+        return;
+      }
     }
   } else {
     ERROR("Ошибка при подготовке провайдера вывода.");
@@ -145,7 +151,7 @@ bool Inference::createInputOutputTensors() {
   // Получение информации о модели.
   inferenceContext_->modelInfo = getModelInfo(*inferenceContext_);
   if (!inferenceContext_->modelInfo) {
-    ERROR("Не удалось получить информацию о модели.");
+    ERROR("Ошибка при получении информации о модели.");
     return false;
   }
 
@@ -196,7 +202,7 @@ bool Inference::createInputOutputTensors() {
 /// @brief
 #define PRINT_TENSOR_SHAPE(tensorInfo)                                         \
   do {                                                                         \
-    LOG("Размерность:");                                                       \
+    LOG("Размерность: ");                                                       \
     LOG("[");                                                                  \
     for (const auto &dim : *tensorInfo.shape) {                                \
       dim != tensorInfo.shape->back() ? LOG(" ", dim, ",") : LOG(" ", dim);    \
@@ -215,8 +221,8 @@ std::unique_ptr<ModelInfo> Inference::getModelInfo(const InferenceContext &infer
     return nullptr;
   }
 
-  //
-  Ort::AllocatorWithDefaultOptions allocator{{}};
+  // Аллокатор.
+  Ort::AllocatorWithDefaultOptions allocator{};
 
   // Получение количества входов.
   modelInfo->inputCount = inferenceContext_->session->GetInputCount();
@@ -285,7 +291,7 @@ std::unique_ptr<ModelInfo> Inference::getModelInfo(const InferenceContext &infer
 #ifndef NDEBUG
 #if (USER_OPTION_SHOW_MODEL_INFO == 1)
     // Вывод информации о входах.
-    LOG("Входы: ");
+    LOG("Выходы: ");
     LOG("Количество: ", modelInfo->outputCount);
 
     for (const auto& tensorInfo : modelInfo->outputTensorsInfo) {
@@ -363,7 +369,21 @@ bool Inference::prepareInputTensors() {
 }
 
 /// @brief
-bool Inference::inference() { return true; }
+bool Inference::inference() {
+  inferenceContext_->session->Run(
+    *inferenceContext_->runOptions,
+    //
+    inferenceContext_->inputTensorNames.data(),
+    inferenceContext_->inputTensorValues.data(),
+    inferenceContext_->modelInfo->inputCount,
+    //
+    inferenceContext_->outputTensorNames.data(),
+    inferenceContext_->outputTensorValues.data(),
+    inferenceContext_->modelInfo->outputCount
+  );
+
+  return true;
+}
 
 /// @brief Подготовка выходных тензоров.
 bool Inference::prepareOutputTensors() {
