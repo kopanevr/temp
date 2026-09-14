@@ -2,6 +2,11 @@
 
 //
 
+#include <filesystem>
+#include <vector>
+
+//
+
 #include "BitField.hpp"
 
 //
@@ -21,6 +26,9 @@ Inference::Inference()
     : eventDispatcher_(eventDispatcher::EventDispatcher::getInstance()) {
   // Инициализация.
   init();
+
+  inferenceContext_->modelPath.modelFilePath = "";
+  inferenceContext_->modelPath.modelFileName = "";
 }
 
 /// @brief Деструктор.
@@ -98,20 +106,38 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
   }
 
   if (prepareProvider()) {
-    DEBUG("Подготовка провайдера вывода.");
-#if (USER_OPTION_ENABLE_PROFILING)
+#if (USER_OPTION_PROFILE_INFERENCE)
     inferenceContext_->sessionOptions->EnableProfiling("");
 #endif
+    if (std::filesystem::exists(inferenceContext_->optimizedModelPath.getPathToModelFile())) {
+      // Создание сессии.
+      inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->optimizedModelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+    } else {
+      // Установка уровня оптимизации модели.
+      inferenceContext_->sessionOptions->SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
+      // Установка пути к файлу оптимизированной модели.
+      inferenceContext_->sessionOptions->SetOptimizedModelFilePath(inferenceContext_->optimizedModelPath.modelDirectoryPath);
 
+      // Создание сессии.
+      inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->modelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+    }
   } else {
     ERROR("Ошибка при подготовке провайдера вывода.");
     return;
+  }
+
+  // Создание входных и выходных тензоров.
+  if (!createInputOutputTensors()) {
+    ERROR("Ошибка при создании входных и выходных тензоров");
   }
 }
 
 /// @brief Подготовка провайдера вывода.
 /// @param options Опции.
-bool Inference::prepareProvider(const uint8_t options) { return true; }
+bool Inference::prepareProvider(const uint8_t options) {
+  DEBUG("Подготовка провайдера вывода.");
+  return true;
+}
 
 /// @brief Создание входных и выходных тензоров.
 /// @param
@@ -145,13 +171,88 @@ std::unique_ptr<ModelInfo> Inference::getModelInfo(const InferenceContext &infer
     return nullptr;
   }
 
+  //
+  Ort::AllocatorWithDefaultOptions allocator{{}};
+
+  // Получение количества входов.
   modelInfo->inputCount = inferenceContext_->session->GetInputCount();
   for (std::size_t i = 0; i < modelInfo->inputCount; i++) {
+    // Получение информации о типе входа.
+    const auto typeInfo = inferenceContext_->session->GetInputTypeInfo(i);
+    const auto tensorTypeAndShapeInfo = typeInfo.GetTensorTypeAndShapeInfo();
+
+    // Получение имени входа.
+    inferenceContext_->modelInfo->inputTensorsInfo.at(i).name = inferenceContext_->session->GetOutputNameAllocated(i, allocator).get();
+    inferenceContext_->inputTensorNames.push_back(inferenceContext.modelInfo->inputTensorsInfo.at(i).name.c_str());
+
+    TensorInfo tensorInfo{};
+
+    // Получение типа данных элементов входа.
+    tensorInfo.tensorElementDataType = tensorTypeAndShapeInfo.GetElementType();
+    // Получение размерности.
+    tensorInfo.shape = std::make_shared<std::vector<int64_t>>(tensorTypeAndShapeInfo.GetShape());
+    if (!tensorInfo.shape) {
+      return nullptr;
+    }
+
+    modelInfo->inputTensorsInfo.push_back(std::move(tensorInfo));
   }
 
+#ifndef NDEBUG
+  size_t i = 0; // Индекс тензора.
+#if (USER_OPTION_SHOW_MODEL_INFO == 1)
+    // Вывод информации о входах.
+    LOG("Входы: ");
+    LOG("Количество: ", modelInfo->inputCount);
+
+    for (const auto& tensorInfo : modelInfo->inputTensorsInfo) {
+      LOG(i++, ":");
+      LOG("Имя ", tensorInfo.name);
+      PRINT_TENSOR_SHAPE(tensorInfo); // Смотреть выше.
+      LOG("Тип элементов: ", tensorInfo.tensorElementDataType);
+    }
+#endif
+#endif
+
+  // Получение количества выходов.
   modelInfo->outputCount = inferenceContext_->session->GetOutputCount();
   for (std::size_t i = 0; i < modelInfo->outputCount; i++) {
+    // Получение информации о типе выхода.
+    const auto typeInfo = inferenceContext_->session->GetOutputTypeInfo(i);
+    const auto tensorTypeAndShapeInfo = typeInfo.GetTensorTypeAndShapeInfo();
+
+    // Получение имени выхода.
+    inferenceContext_->modelInfo->outputTensorsInfo.at(i).name = inferenceContext_->session->GetOutputNameAllocated(i, allocator).get();
+    inferenceContext_->outputTensorNames.push_back(inferenceContext.modelInfo->outputTensorsInfo.at(i).name.c_str());
+
+    TensorInfo tensorInfo{};
+
+    // Получение типа данных элементов выхода.
+    tensorInfo.tensorElementDataType = tensorTypeAndShapeInfo.GetElementType();
+    // Получение размерности.
+    tensorInfo.shape = std::make_shared<std::vector<int64_t>>(tensorTypeAndShapeInfo.GetShape());
+    if (!tensorInfo.shape) {
+      return nullptr;
+    }
+
+    modelInfo->outputTensorsInfo.push_back(std::move(tensorInfo));
   }
+
+#ifndef NDEBUG
+#if (USER_OPTION_SHOW_MODEL_INFO == 1)
+    // Вывод информации о входах.
+    LOG("Входы: ");
+    LOG("Количество: ", modelInfo->outputCount);
+
+    for (const auto& tensorInfo : modelInfo->outputTensorsInfo) {
+      LOG(i++, ":");
+      LOG("Имя ", tensorInfo.name);
+      PRINT_TENSOR_SHAPE(tensorInfo); // Смотреть выше.
+      LOG("Тип элементов: ", tensorInfo.tensorElementDataType);
+    }
+#endif
+#endif
+  return modelInfo;
 }
 
 #undef PRINT_TENSOR_SHAPE

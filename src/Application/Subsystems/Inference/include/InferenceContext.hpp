@@ -11,12 +11,27 @@
 //
 
 namespace inference {
+/// @brief Информация о тензоре.
+struct TensorInfo final {
+  /// @brief Тип данных элементов.
+  ONNXTensorElementDataType tensorElementDataType;
+  /// @brief Указатель на размерность тензора.
+  std::shared_ptr<std::vector<int64_t>> shape;
+  /// @brief Имя.
+  std::string name;
+};
+
 //// @brief
 struct ModelInfo {
   /// @brief Количество входов.
   std::size_t inputCount;
   /// @brief Количество выходов.
   std::size_t outputCount;
+
+  /// @brief Информация о входных тензорах.
+  std::vector<TensorInfo> inputTensorsInfo;
+  /// @brief Информация о выходных тензорах.
+  std::vector<TensorInfo> outputTensorsInfo;
 };
 
 /// @brief Тензор.
@@ -27,6 +42,27 @@ struct Tensor final {
 
   /// @brief Сырые данные тензора.
   std::vector<std::byte> rawData;
+};
+
+/// @brief
+struct ModelPath final {
+  /// @brief Путь к директории модели.
+  char *modelDirectoryPath;
+  /// @brief Имя файла модели.
+  char *modelFileName;
+  /// @brief Путь к файлу модели.
+  std::string modelFilePath;
+
+  /// @brief Возвращает путь к файлу модели.
+  /// @details
+  /// @return Путь к файлу модели.
+  [[nodiscard]] const char *getPathToModelFile() {
+    if (!modelDirectoryPath || !modelFileName) {
+      return nullptr;
+    }
+    (modelFilePath += modelDirectoryPath) += modelFileName;
+    return modelFilePath.c_str();
+  }
 };
 
 /// @brief Контекст вывода.
@@ -56,5 +92,10 @@ struct InferenceContext final {
   std::vector<const char *> inputTensorNames;
   /// @brief Имена выходных тензоров.
   std::vector<const char *> outputTensorNames;
+
+  /// @brief
+  ModelPath modelPath;
+  /// @brief
+  ModelPath optimizedModelPath;
 };
 } // namespace inference
