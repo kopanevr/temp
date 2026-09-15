@@ -18,10 +18,6 @@ target_link_libraries(Inference PRIVATE ${CMAKE_SOURCE_DIR}/thirdParty/onnxrunti
 target_link_libraries(Inference PRIVATE Logger)
 target_link_libraries(Inference PRIVATE EventDispatcher)
 
-if (USER_OPTION_PROFILE_INFERENCE)
-  target_compile_definitions(Inference PRIVATE USER_OPTION_PROFILE_INFERENCE)
-endif()
-
 if (USER_OPTION_SHOW_MODEL_INFO)
   target_compile_definitions(Inference PRIVATE USER_OPTION_SHOW_MODEL_INFO)
 endif()

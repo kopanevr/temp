@@ -30,6 +30,7 @@
 
 #include "EventDispatcher.hpp"
 #include "Logger.hpp"
+#include "Temp.hpp"
 #include "Inference.hpp"
 
 //
@@ -109,6 +110,7 @@ private:
     size_t i = 0;
     ADD_SUBSYSTEM(logger::Logger);
     ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
+    ADD_SUBSYSTEM(temp::Temp);
     ADD_SUBSYSTEM(inference::Inference);
   }
 

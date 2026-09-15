@@ -3,6 +3,7 @@ add_executable(Application Application.cpp main.cpp)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/CommandInterpreter)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Logger)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/EventDispatcher)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Temp)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Inference)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application/Subsystems/SubsystemManager)
 
@@ -19,6 +20,7 @@ target_link_libraries(
   Application PRIVATE
   CommandInterpreter
   EventDispatcher
+  Temp
   SubsystemManager
 )
 

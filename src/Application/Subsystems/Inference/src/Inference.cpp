@@ -105,9 +105,8 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
   }
 
   if (prepareProvider()) {
-#if (USER_OPTION_PROFILE_INFERENCE)
     inferenceContext_->sessionOptions->EnableProfiling("");
-#endif
+
     if (std::filesystem::exists(inferenceContext_->optimizedModelPath.getPathToModelFile())) {
       // Создание сессии.
       inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->optimizedModelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
