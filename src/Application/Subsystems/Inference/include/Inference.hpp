@@ -92,6 +92,7 @@ private:
   /// @param inferenceContext Контекст вывода.
   /// @return Информация о модели.
   [[nodiscard]] std::unique_ptr<ModelInfo> getModelInfo(const InferenceContext &inferenceContext);
+
 private:
   /// @brief
   std::thread inferenceThread_;

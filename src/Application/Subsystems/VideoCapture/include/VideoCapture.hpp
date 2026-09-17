@@ -22,31 +22,35 @@
 
 //
 
-namespace temp {
+#include <opencv4/opencv2/opencv.hpp>
+
+//
+
+namespace videoCapture {
 /// @brief
-class Temp : public Subsystem {
+class VideoCapture : public Subsystem {
 public:
   /// @brief Деструктор.
-  ~Temp() = default;
+  ~VideoCapture() = default;
 
   /// @brief
   /// @return
-  static Temp *getInstance() {
-    static Temp instance{};
+  static VideoCapture *getInstance() {
+    static VideoCapture instance{};
     return &instance;
   }
 
 private:
   /// @brief Конструктор.
-  Temp();
+  VideoCapture();
 
-  Temp &operator=(const Temp &) = delete;
-  Temp(const Temp &) = delete;
+  VideoCapture &operator=(const VideoCapture &) = delete;
+  VideoCapture(const VideoCapture &) = delete;
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::Temp);
-    SET_SUBSYSTEM_NAME("Temp");
+    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::VideoCapture);
+    SET_SUBSYSTEM_NAME("VideoCapture");
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
@@ -55,10 +59,16 @@ private:
   void setBeforeShutDown() override {}
 
   /// @brief Тело процесса.
-  void processBody() override {}
+  void processBody() override;
+
+  /// @brief
+  void run();
 
 private:
   /// @brief
-  std::thread TempThread_;
+  std::unique_ptr<cv::VideoCapture> videoCapture_;
+
+  /// @brief
+  std::thread videoCaptureThread_;
 };
-} // namespace temp
+} // namespace videoCapture

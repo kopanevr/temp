@@ -3,7 +3,7 @@
  * @brief Описание менеджера подсистем.
  * @details Для добавления подсистемы в менеджер использовать @ref ADD_SUBSYSTEM.
  * @details Порядок вызова метода @ref process у любой подсистемы зависит от
- * порядка добавления подсистемы в список менеджера.
+ * порядка добавления подсистемы в менеджер.
  */
 
 #pragma once
@@ -29,7 +29,7 @@
 
 #include "EventDispatcher.hpp"
 #include "Logger.hpp"
-#include "Temp.hpp"
+#include "VideoCapture.hpp"
 #include "Inference.hpp"
 
 //
@@ -109,7 +109,7 @@ private:
     size_t i = 0;
     ADD_SUBSYSTEM(logger::Logger);
     ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
-    ADD_SUBSYSTEM(temp::Temp);
+    ADD_SUBSYSTEM(videoCapture::VideoCapture);
     ADD_SUBSYSTEM(inference::Inference);
   }
 
