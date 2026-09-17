@@ -54,9 +54,12 @@ private:
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
-  void setBeforeStartUp() override {}
+  void setBeforeStartUp() override;
   /// @brief Предварительная настройка перед остановкой подсистемы.
   void setBeforeShutDown() override {}
+
+  /// @brief
+  void prepareBeforeStartVideCapture();
 
   /// @brief Тело процесса.
   void processBody() override;

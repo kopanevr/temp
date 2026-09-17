@@ -110,6 +110,9 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
     if (std::filesystem::exists(inferenceContext_->optimizedModelPath.getPathToModelFile())) {
       // Создание сессии.
       inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->optimizedModelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+      if (!inferenceContext_->session) {
+        return;
+      }
     } else {
       // Установка уровня оптимизации модели.
       inferenceContext_->sessionOptions->SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
