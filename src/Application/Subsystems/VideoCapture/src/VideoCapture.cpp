@@ -25,7 +25,7 @@ void VideoCapture::prepareBeforeStartVideCapture() {
     return;
   }
 
-  if (!videoCapture_->isOpened()) {
+  if (!videoCapture_->open(0)) {
     ERROR("Ошибка открытия устройства захвата.");
     return;
   }
