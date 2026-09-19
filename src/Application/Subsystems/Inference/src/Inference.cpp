@@ -80,11 +80,8 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
   }
   */
 
-  // Создание контекста вывода.
-  inferenceContext_.reset(new (std::nothrow) InferenceContext());
-  if (!inferenceContext_) {
-    return;
-  }
+  // Создание локального контекста вывода.
+  auto localContext = std::make_unique<InferenceContext>();
 
   // Создание опций пулов потоков.
   inferenceContext_->threadingOptions.reset(new (std::nothrow) Ort::ThreadingOptions());
@@ -94,7 +91,7 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
 
   // Создание окружения.
   inferenceContext_->env.reset(new (std::nothrow) Ort::Env(*inferenceContext_->threadingOptions, ORT_LOGGING_LEVEL_WARNING, "onnxInference"));
-  if (!inferenceContext_->threadingOptions) {
+  if (!inferenceContext_->env) {
     return;
   }
 
@@ -104,12 +101,17 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
     return;
   }
 
+  inferenceContext_ = std::move(localContext);
+
   if (prepareProvider()) {
     inferenceContext_->sessionOptions->EnableProfiling("");
 
-    if (std::filesystem::exists(inferenceContext_->optimizedModelPath.getPathToModelFile())) {
+    const auto optimizedModelPath = inferenceContext_->optimizedModelPath.getPathToModelFile();
+    const auto modelPath = inferenceContext_->modelPath.getPathToModelFile();
+
+    if (std::filesystem::exists(optimizedModelPath)) {
       // Создание сессии.
-      inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->optimizedModelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+      inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, optimizedModelPath, *inferenceContext_->sessionOptions));
       if (!inferenceContext_->session) {
         return;
       }
@@ -117,26 +119,29 @@ void Inference::prepareBeforeStartInference(const uint8_t options) {
       // Установка уровня оптимизации модели.
       inferenceContext_->sessionOptions->SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
 
-      if (std::filesystem::exists(inferenceContext_->modelPath.getPathToModelFile()) ||
+      if (std::filesystem::exists(modelPath) ||
           std::filesystem::is_directory(inferenceContext_->optimizedModelPath.modelDirectoryPath)) {
         // Установка пути к файлу оптимизированной модели.
         inferenceContext_->sessionOptions->SetOptimizedModelFilePath(inferenceContext_->optimizedModelPath.modelDirectoryPath);
 
         // Создание сессии.
-        inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, inferenceContext_->modelPath.getPathToModelFile(), *inferenceContext_->sessionOptions));
+        inferenceContext_->session.reset(new (std::nothrow) Ort::Session(*inferenceContext_->env, modelPath, *inferenceContext_->sessionOptions));
       } else {
-        ERROR("Ошибка при создании сессии.");
+        ERROR("Ошибка при создании сессии: файлы моделей не найдены.");
+        inferenceContext_.reset();
         return;
       }
     }
   } else {
     ERROR("Ошибка при подготовке провайдера вывода.");
+    inferenceContext_.reset();
     return;
   }
 
   // Создание входных и выходных тензоров.
   if (!createInputOutputTensors()) {
-    ERROR("Ошибка при создании входных и выходных тензоров");
+    ERROR("Ошибка при создании входных и выходных тензоров.");
+    inferenceContext_.reset();
   }
 }
 
