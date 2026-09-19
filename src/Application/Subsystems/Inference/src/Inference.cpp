@@ -209,7 +209,7 @@ bool Inference::createInputOutputTensors() {
 /// @brief
 #define PRINT_TENSOR_SHAPE(tensorInfo)                                         \
   do {                                                                         \
-    LOG("Размерность: ");                                                       \
+    LOG("Размерность: ");                                                      \
     LOG("[");                                                                  \
     for (const auto &dim : *tensorInfo.shape) {                                \
       dim != tensorInfo.shape->back() ? LOG(" ", dim, ",") : LOG(" ", dim);    \
@@ -256,18 +256,17 @@ std::unique_ptr<ModelInfo> Inference::getModelInfo(const InferenceContext &infer
   }
 
 #ifndef NDEBUG
-  size_t i = 0; // Индекс тензора.
 #if (USER_OPTION_SHOW_MODEL_INFO == 1)
-    // Вывод информации о входах.
-    LOG("Входы: ");
-    LOG("Количество: ", modelInfo->inputCount);
-
-    for (const auto& tensorInfo : modelInfo->inputTensorsInfo) {
-      LOG(i++, ":");
-      LOG("Имя ", tensorInfo.name);
-      PRINT_TENSOR_SHAPE(tensorInfo); // Смотреть выше.
-      LOG("Тип элементов: ", tensorInfo.tensorElementDataType);
-    }
+  size_t j = 0; // Индекс тензора.
+  // Вывод информации о входах.
+  LOG("Входы: ");
+  LOG("Количество: ", modelInfo->inputCount);
+  for (const auto& tensorInfo : modelInfo->inputTensorsInfo) {
+    LOG(j++, ":");
+    LOG("Имя ", tensorInfo.name);
+    PRINT_TENSOR_SHAPE(tensorInfo); // Смотреть выше.
+    LOG("Тип элементов: ", tensorInfo.tensorElementDataType);
+  }
 #endif
 #endif
 
@@ -297,16 +296,16 @@ std::unique_ptr<ModelInfo> Inference::getModelInfo(const InferenceContext &infer
 
 #ifndef NDEBUG
 #if (USER_OPTION_SHOW_MODEL_INFO == 1)
-    // Вывод информации о входах.
-    LOG("Выходы: ");
-    LOG("Количество: ", modelInfo->outputCount);
-
-    for (const auto& tensorInfo : modelInfo->outputTensorsInfo) {
-      LOG(i++, ":");
-      LOG("Имя ", tensorInfo.name);
-      PRINT_TENSOR_SHAPE(tensorInfo); // Смотреть выше.
-      LOG("Тип элементов: ", tensorInfo.tensorElementDataType);
-    }
+  j = 0;
+  // Вывод информации о входах.
+  LOG("Выходы: ");
+  LOG("Количество: ", modelInfo->outputCount);
+  for (const auto& tensorInfo : modelInfo->outputTensorsInfo) {
+    LOG(j++, ":");
+    LOG("Имя ", tensorInfo.name);
+    PRINT_TENSOR_SHAPE(tensorInfo); // Смотреть выше.
+    LOG("Тип элементов: ", tensorInfo.tensorElementDataType);
+  }
 #endif
 #endif
   return modelInfo;
