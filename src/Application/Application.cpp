@@ -95,8 +95,7 @@ void Application::deinit() {
     subsystemManager_->shutDown();
   }
 
-  DEBUG("Период времени выполнения приложения составил: ",
-        applicationContext_->executedTime, " миллисекунд [мсек].");
+  DEBUG("Истекшее время: ", applicationContext_->executedTime, " [мсек].");
 
   CommandInterpreter::instance_ = nullptr;
   subsystemManager::SubsystemManager::instance_ = nullptr;

@@ -1,7 +1,6 @@
 /**
  * @file
  * @brief Описание менеджера подсистем.
- * @details Для добавления подсистемы в менеджер использовать @ref ADD_SUBSYSTEM.
  * @details Порядок вызова метода @ref process у любой подсистемы зависит от
  * порядка добавления подсистемы в менеджер.
  */
@@ -37,16 +36,6 @@
 namespace app {
 class Application;
 } // namespace app
-
-//
-
-/// @brief Добавляет подсистему в список менеджера подсистем.
-/// @param name Имя класса подсистемы, производного от @ref Subsystem.
-#define ADD_SUBSYSTEM(name)                                                    \
-  do {                                                                         \
-    assert(i < subsystemCount_);                                               \
-    subsystems_[i++] = name::getInstance();                                    \
-  } while (false)
 
 //
 
@@ -90,7 +79,7 @@ public:
   /// @brief Возвращает подсистему по идентификатору.
   /// @param id Идентификатор.
   /// @return Указатель на подсистему.
-  constexpr Subsystem *getSubsystemById(const SubsystemId id) const {
+  Subsystem *getSubsystemById(const SubsystemId id) const {
     for (const auto &item : subsystems_) {
       if (item->getId() == id) {
         return item;
@@ -107,10 +96,15 @@ private:
 
     // Добавление подсистем.
     size_t i = 0;
-    ADD_SUBSYSTEM(logger::Logger);
-    ADD_SUBSYSTEM(eventDispatcher::EventDispatcher);
-    ADD_SUBSYSTEM(videoCapture::VideoCapture);
-    ADD_SUBSYSTEM(inference::Inference);
+    subsystems_[i++] = logger::Logger::getInstance();
+    subsystems_[i++] = eventDispatcher::EventDispatcher::getInstance();
+    subsystems_[i++] = videoCapture::VideoCapture::getInstance();
+    subsystems_[i++] = inference::Inference::getInstance();
+
+    // Заполнение оставшейся ячейки.
+    while (i < subsystemCount_) {
+      subsystems_[i++] = nullptr;
+    }
   }
 
   /// @brief Дружественный класс.
