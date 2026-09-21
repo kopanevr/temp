@@ -18,6 +18,12 @@
 
 //
 
+namespace subsystemManager {
+  class SubsystemManager;
+}
+
+//
+
 namespace logger {
 /// @brief Регистратор событий.
 class Logger final : public Subsystem {
@@ -26,8 +32,7 @@ public:
   ~Logger() = default;
 
   static Logger *getInstance() {
-    static Logger instance{};
-    return &instance;
+    return instance_;
   }
 
   /// @brief
@@ -55,6 +60,9 @@ private:
   Logger &operator=(const Logger &) = delete;
   Logger(const Logger &) = delete;
 
+  /// @brief Дружественный класс.
+  friend class subsystemManager::SubsystemManager;
+
   /// @brief Инициализация подсистемы.
   void init() override {
     SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::Logger);
@@ -70,6 +78,8 @@ private:
   void processBody() override {}
 
 private:
+  /// @brief
+  static inline Logger *instance_;
   /// @brief
   mutable std::mutex mutex;
 };

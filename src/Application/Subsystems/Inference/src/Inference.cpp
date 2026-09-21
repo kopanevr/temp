@@ -26,9 +26,6 @@ Inference::Inference()
     : eventDispatcher_(eventDispatcher::EventDispatcher::getInstance()) {
   // Инициализация.
   init();
-
-  inferenceContext_->modelPath.modelFilePath = "";
-  inferenceContext_->modelPath.modelFileName = "";
 }
 
 /// @brief Деструктор.

@@ -9,10 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Опции.
 
-# Пользовательские опции имеют префикс USER_OPTION.
-
-# option(USER_OPTION_ "" ON)
-
 option(USER_OPTION_SHOW_MODEL_INFO "Включить вывод информации о модели при отладке." ON)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/Application)

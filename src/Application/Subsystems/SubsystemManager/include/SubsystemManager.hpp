@@ -49,6 +49,19 @@ public:
 
   /// @brief Настройка перед запуском подсистемы.
   void setBeforeStartUp() override {
+    // Добавление подсистем.
+    size_t i = 0;
+
+    // Заполнение оставшейся ячейки.
+    while (i < subsystemCount_) {
+      subsystems_[i] = std::make_unique<logger::Logger>();
+      if (!subsystems_[i++]) {
+        return;
+      }
+
+      i++;
+    }
+
     for (const auto &item : subsystems_) {
       item->startUp();
     }
@@ -82,7 +95,7 @@ public:
   Subsystem *getSubsystemById(const SubsystemId id) const {
     for (const auto &item : subsystems_) {
       if (item->getId() == id) {
-        return item;
+        return item.get();
       }
     }
     return nullptr;
@@ -93,18 +106,6 @@ private:
   SubsystemManager() {
     // Инициализация.
     init();
-
-    // Добавление подсистем.
-    size_t i = 0;
-    subsystems_[i++] = logger::Logger::getInstance();
-    subsystems_[i++] = eventDispatcher::EventDispatcher::getInstance();
-    subsystems_[i++] = videoCapture::VideoCapture::getInstance();
-    subsystems_[i++] = inference::Inference::getInstance();
-
-    // Заполнение оставшейся ячейки.
-    while (i < subsystemCount_) {
-      subsystems_[i++] = nullptr;
-    }
   }
 
   /// @brief Дружественный класс.
@@ -120,7 +121,7 @@ private:
   /// @brief Количество подсистем.
   static const size_t subsystemCount_ = static_cast<size_t>(SubsystemId::Count);
   /// @brief Подсистемы.
-  std::array<Subsystem *, subsystemCount_> subsystems_;
+  std::array<std::unique_ptr<Subsystem>, subsystemCount_> subsystems_;
 
   /// @brief Указатель на экземпляр.
   static inline subsystemManager::SubsystemManager *instance_;
