@@ -11,6 +11,12 @@
 //
 
 namespace inference {
+char *modelDirectoryPath = "/models/";
+char *modelFileName = "yolo26n-depth.onnx";
+
+char *optimizedModelDirectoryPath = "/models/";
+char *optimizedModelFileName = "optimized_yolo26n-depth.onnx";
+
 /// @brief Информация о тензоре.
 struct TensorInfo final {
   /// @brief Тип данных элементов.
@@ -83,7 +89,6 @@ struct InferenceContext final {
   std::unique_ptr<Ort::RunOptions> runOptions;
   /// @brief Указатель на информацию о модели.
   std::unique_ptr<ModelInfo> modelInfo;
-
 
   /// @brief Входные тензоры.
   std::vector<Tensor> inputTensors;

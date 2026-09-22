@@ -53,6 +53,9 @@ private:
   void init() override {
     SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::Inference);
     SET_SUBSYSTEM_NAME("Inference");
+
+    // Установка пути к модели.
+    setModelFilePath();
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
@@ -79,6 +82,9 @@ private:
   /// @brief Подготовка выходных тензоров.
   bool prepareOutputTensors();
 
+  /// @brief Устанавливает путь к модели.
+  void setModelFilePath();
+
   /// @brief Подготовка перед запуском вывода.
   /// @param options Опции. Дополнительно смотреть @ref inference::prepareSettings.
   void prepareBeforeStartInference([[maybe_unused]] const uint8_t options = 0);
@@ -103,4 +109,13 @@ private:
   /// @brief Контекст вывода.
   std::unique_ptr<InferenceContext> inferenceContext_;
 };
+
+/// @brief Устанавливает путь к модели.
+inline void Inference::setModelFilePath() {
+  inferenceContext_->modelPath.modelDirectoryPath = inference::modelDirectoryPath;
+  inferenceContext_->modelPath.modelFileName = inference::modelFileName;
+
+  inferenceContext_->optimizedModelPath.modelDirectoryPath = inference::optimizedModelDirectoryPath;
+  inferenceContext_->optimizedModelPath.modelFileName = inference::optimizedModelFileName;
+}
 } // namespace inference
