@@ -52,13 +52,21 @@ public:
     // Добавление подсистем.
     size_t i = 0;
 
-    // Заполнение оставшейся ячейки.
-    while (i < subsystemCount_) {
-      subsystems_[i] = std::make_unique<logger::Logger>();
-      if (!subsystems_[i++]) {
+    if (i < subsystemCount_) {
+      subsystems_[i].reset(new (std::nothrow) logger::Logger());
+      if (!subsystems_[i]) {
         return;
       }
+      logger::Logger::instance_ = static_cast<logger::Logger *>(subsystems_[i].get());
+      i++;
+    }
 
+    if (i < subsystemCount_) {
+      subsystems_[i].reset(new (std::nothrow) eventDispatcher::EventDispatcher());
+      if (!subsystems_[i]) {
+        return;
+      }
+      eventDispatcher::EventDispatcher::instance_ = static_cast<eventDispatcher::EventDispatcher *>(subsystems_[i].get());
       i++;
     }
 

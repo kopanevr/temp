@@ -11,11 +11,11 @@
 //
 
 namespace inference {
-char *modelDirectoryPath = "/models/";
-char *modelFileName = "yolo26n-depth.onnx";
+inline const char *modelDirectoryPath = "/models/";
+inline const char *modelFileName = "yolo26n-depth.onnx";
 
-char *optimizedModelDirectoryPath = "/models/";
-char *optimizedModelFileName = "optimized_yolo26n-depth.onnx";
+inline const char *optimizedModelDirectoryPath = "/models/";
+inline const char *optimizedModelFileName = "optimized_yolo26n-depth.onnx";
 
 /// @brief Информация о тензоре.
 struct TensorInfo final {

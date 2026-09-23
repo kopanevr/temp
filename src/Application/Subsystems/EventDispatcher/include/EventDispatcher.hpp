@@ -39,6 +39,11 @@ using VariantPayload = std::variant<int, float>;
 
 //
 
+namespace subsystemManager {
+  class SubsystemManager;
+}
+
+//
 namespace eventDispatcher {
 /// @brief Событие.
 struct Event {
@@ -64,8 +69,7 @@ public:
   /// @brief
   /// @return
   static EventDispatcher *getInstance() {
-    static EventDispatcher instance{};
-    return &instance;
+    return instance_;
   }
 
   /// @brief
@@ -125,6 +129,9 @@ private:
     init();
   }
 
+  /// @brief Дружественный класс.
+  friend class subsystemManager::SubsystemManager;
+
   /// @brief Инициализация подсистемы.
   void init() override {
     SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::EventDispatcher);
@@ -156,6 +163,9 @@ private:
   }
 
 private:
+  /// @brief
+  static inline EventDispatcher *instance_;
+
   static constexpr size_t MAX_EVENTS = 128UL;
   using Events = std::array<Event, MAX_EVENTS>;
   Events eventBufferA_;

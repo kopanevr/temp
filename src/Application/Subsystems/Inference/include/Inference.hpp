@@ -112,10 +112,10 @@ private:
 
 /// @brief Устанавливает путь к модели.
 inline void Inference::setModelFilePath() {
-  inferenceContext_->modelPath.modelDirectoryPath = inference::modelDirectoryPath;
-  inferenceContext_->modelPath.modelFileName = inference::modelFileName;
+  inferenceContext_->modelPath.modelDirectoryPath = const_cast<char *>(inference::modelDirectoryPath);
+  inferenceContext_->modelPath.modelFileName = const_cast<char *>(inference::modelFileName);
 
-  inferenceContext_->optimizedModelPath.modelDirectoryPath = inference::optimizedModelDirectoryPath;
-  inferenceContext_->optimizedModelPath.modelFileName = inference::optimizedModelFileName;
+  inferenceContext_->optimizedModelPath.modelDirectoryPath = const_cast<char *>(inference::optimizedModelDirectoryPath);
+  inferenceContext_->optimizedModelPath.modelFileName = const_cast<char *>(inference::optimizedModelFileName);
 }
 } // namespace inference
