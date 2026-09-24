@@ -40,7 +40,12 @@ using bitSubfield_t = uint64_t;
 /// @param listOfBitSubfield Список флагов-состояний или битовых подполей.
 #define BIT_FIELD(id, expectedSize, listOfBitSubfield)                         \
   struct __attribute__((packed)) {                                             \
-    listOfBitSubfield                                                          \
+    union {                                                                    \
+      struct __attribute__((packed)) {                                         \
+        listOfBitSubfield                                                      \
+      };                                                                       \
+      std::byte temp[expectedSize];                                            \
+    };                                                                         \
   } MAKE_BIT_FIELD_NAME(id);                                                   \
   static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
 
