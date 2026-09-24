@@ -26,6 +26,12 @@
 
 //
 
+namespace subsystemManager {
+  class SubsystemManager;
+}
+
+//
+
 namespace videoCapture {
 /// @brief
 class VideoCapture : public Subsystem {
@@ -36,8 +42,7 @@ public:
   /// @brief
   /// @return
   static VideoCapture *getInstance() {
-    static VideoCapture instance{};
-    return &instance;
+    return instance_;
   }
 
 private:
@@ -46,6 +51,9 @@ private:
 
   VideoCapture &operator=(const VideoCapture &) = delete;
   VideoCapture(const VideoCapture &) = delete;
+
+  /// @brief Дружественный класс.
+  friend class subsystemManager::SubsystemManager;
 
   /// @brief Инициализация подсистемы.
   void init() override {
@@ -68,6 +76,9 @@ private:
   void run();
 
 private:
+  /// @brief
+  static inline VideoCapture *instance_;
+
   /// @brief
   std::unique_ptr<cv::VideoCapture> videoCapture_;
 

@@ -28,6 +28,12 @@
 
 //
 
+namespace subsystemManager {
+  class SubsystemManager;
+}
+
+//
+
 namespace inference {
 /// @brief
 class Inference : public Subsystem {
@@ -38,8 +44,7 @@ public:
   /// @brief
   /// @return
   static Inference *getInstance() {
-    static Inference instance{};
-    return &instance;
+    return instance_;
   }
 
 private:
@@ -48,6 +53,9 @@ private:
 
   Inference &operator=(const Inference &) = delete;
   Inference(const Inference &) = delete;
+
+  /// @brief Дружественный класс.
+  friend class subsystemManager::SubsystemManager;
 
   /// @brief Инициализация подсистемы.
   void init() override {
@@ -100,6 +108,9 @@ private:
   [[nodiscard]] std::unique_ptr<ModelInfo> getModelInfo(const InferenceContext &inferenceContext);
 
 private:
+    /// @brief
+  static inline Inference *instance_;
+
   /// @brief
   std::thread inferenceThread_;
 

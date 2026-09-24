@@ -70,6 +70,24 @@ public:
       i++;
     }
 
+    if (i < subsystemCount_) {
+      subsystems_[i].reset(new (std::nothrow) videoCapture::VideoCapture());
+      if (!subsystems_[i]) {
+        return;
+      }
+      videoCapture::VideoCapture::instance_ = static_cast<videoCapture::VideoCapture *>(subsystems_[i].get());
+      i++;
+    }
+
+    if (i < subsystemCount_) {
+      subsystems_[i].reset(new (std::nothrow) inference::Inference());
+      if (!subsystems_[i]) {
+        return;
+      }
+      inference::Inference::instance_ = static_cast<inference::Inference *>(subsystems_[i].get());
+      i++;
+    }
+
     for (const auto &item : subsystems_) {
       item->startUp();
     }
