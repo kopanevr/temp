@@ -44,7 +44,7 @@ using bitSubfield_t = uint64_t;
       struct __attribute__((packed)) {                                         \
         listOfBitSubfield                                                      \
       };                                                                       \
-      std::byte temp[expectedSize];                                            \
+      uint8_t temp[expectedSize];                                              \
     };                                                                         \
   } MAKE_BIT_FIELD_NAME(id);                                                   \
   static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
@@ -55,7 +55,12 @@ using bitSubfield_t = uint64_t;
 /// @param listOfBitSubfield Список флагов-состояний или битовых подполей.
 #define STATIC_BIT_FIELD(id, expectedSize, listOfBitSubfield)                  \
   static struct __attribute__((packed)) {                                      \
-    listOfBitSubfield                                                          \
+    union {                                                                    \
+      struct __attribute__((packed)) {                                         \
+        listOfBitSubfield                                                      \
+      };                                                                       \
+      uint8_t temp[expectedSize];                                              \
+    };                                                                         \
   } MAKE_BIT_FIELD_NAME(id);                                                   \
   static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
 
@@ -65,7 +70,12 @@ using bitSubfield_t = uint64_t;
 /// @param listOfBitSubfield Список флагов-состояний или битовых подполей.
 #define CONST_BIT_FIELD(id, expectedSize, listOfBitSubfield)                   \
   const struct __attribute__((packed)) {                                       \
-    listOfBitSubfield                                                          \
+    union {                                                                    \
+      struct __attribute__((packed)) {                                         \
+        listOfBitSubfield                                                      \
+      };                                                                       \
+      uint8_t temp[expectedSize];                                              \
+    };                                                                         \
   } MAKE_BIT_FIELD_NAME(id);                                                   \
   static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
 
