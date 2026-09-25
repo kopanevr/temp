@@ -28,7 +28,7 @@
 
 #include "EventDispatcher.hpp"
 #include "Logger.hpp"
-#include "VideoCapture.hpp"
+#include "FrameCapture.hpp"
 #include "Inference.hpp"
 
 //
@@ -71,11 +71,11 @@ public:
     }
 
     if (i < subsystemCount_) {
-      subsystems_[i].reset(new (std::nothrow) videoCapture::VideoCapture());
+      subsystems_[i].reset(new (std::nothrow) frameCapture::FrameCapture());
       if (!subsystems_[i]) {
         return;
       }
-      videoCapture::VideoCapture::instance_ = static_cast<videoCapture::VideoCapture *>(subsystems_[i].get());
+      frameCapture::FrameCapture::instance_ = static_cast<frameCapture::FrameCapture *>(subsystems_[i].get());
       i++;
     }
 

@@ -12,15 +12,22 @@
 
 //
 
-#include "Subsystem.hpp"
 
 #include "InferenceContext.hpp"
+
+//
+
+#include "Subsystem.hpp"
 
 //
 
 // Подсистемы.
 
 #include "EventDispatcher.hpp"
+
+//
+
+#include "FrameBuffer.hpp"
 
 //
 
@@ -91,7 +98,7 @@ private:
   bool prepareOutputTensors();
 
   /// @brief Устанавливает путь к модели.
-  void setModelFilePath();
+  [[deprecated]] void setModelFilePath();
 
   /// @brief Подготовка перед запуском вывода.
   /// @param options Опции. Дополнительно смотреть @ref inference::prepareSettings.
@@ -108,7 +115,7 @@ private:
   [[nodiscard]] std::unique_ptr<ModelInfo> getModelInfo(const InferenceContext &inferenceContext);
 
 private:
-    /// @brief
+  /// @brief
   static inline Inference *instance_;
 
   /// @brief
@@ -119,6 +126,9 @@ private:
 
   /// @brief Контекст вывода.
   std::unique_ptr<InferenceContext> inferenceContext_;
+
+  /// @brief Буфер кадра.
+  std::shared_ptr<frameCapture::FrameBuffer> frameBuffer_;
 };
 
 /// @brief Устанавливает путь к модели.

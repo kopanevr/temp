@@ -1,25 +1,27 @@
-#include "VideoCapture.hpp"
+#include "FrameCapture.hpp"
 
 //
 
-using namespace videoCapture;
+using namespace frameCapture;
 
 //
 
 /// @brief Конструктор.
-VideoCapture::VideoCapture() {
+FrameCapture::FrameCapture() {
   // Инициализация.
   init();
 }
 
 /// @brief Предварительная настройка перед запуском подсистемы.
-void VideoCapture::setBeforeStartUp() {
+void FrameCapture::setBeforeStartUp() {
   // Подготовка перед захватом.
-  prepareBeforeStartVideCapture();
+  prepareBeforeStartFrameCapture();
 }
 
 /// @brief
-void VideoCapture::prepareBeforeStartVideCapture() {
+void FrameCapture::prepareBeforeStartFrameCapture() {
+  frameBuffer_ =
+
   videoCapture_.reset(new (std::nothrow) cv::VideoCapture());
   if (!videoCapture_) {
     return;
@@ -33,13 +35,13 @@ void VideoCapture::prepareBeforeStartVideCapture() {
 
 /// @brief Тело процесса.
 /// @details
-void VideoCapture::processBody() {
+void FrameCapture::processBody() {
   STATIC_BIT_FIELD(0, 1, FLAG(isStarted)); // Статическое битовое поле.
 
   if (!GET_FLAG_STATE(0, isStarted)) {
     // Выполнение при первом запуске.
 
-    videoCaptureThread_ = std::thread(&VideoCapture::run, this);
+    frameCaptureThread_ = std::thread(&FrameCapture::run, this);
     SET_FLAG(0, isStarted);
   } else {
     // Выполнение при последующих запусках.
@@ -52,4 +54,10 @@ void VideoCapture::processBody() {
 }
 
 /// @brief
-void VideoCapture::run() {}
+void FrameCapture::run() {
+
+  while () {
+    if (!videoCapture_->read()) {
+    }
+  }
+}

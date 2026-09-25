@@ -45,7 +45,7 @@ public:
   /// @brief Выводит данные в терминал.
   /// @param args Данные для вывода.
   template <typename... Args> void printToTerminal(Args &&...args) const {
-    std::lock_guard<std::mutex> lock(mutex);
+    std::lock_guard<std::mutex> lock(mutex_);
     ((std::cout << std::forward<Args>(args)), ...);
     std::cout << std::endl;
   }
@@ -81,7 +81,7 @@ private:
   /// @brief
   static inline Logger *instance_;
   /// @brief
-  mutable std::mutex mutex;
+  mutable std::mutex mutex_;
 };
 } // namespace logger
 

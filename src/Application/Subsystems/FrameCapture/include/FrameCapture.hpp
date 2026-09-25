@@ -22,6 +22,10 @@
 
 //
 
+#include "FrameBuffer.hpp"
+
+//
+
 #include <opencv4/opencv2/opencv.hpp>
 
 //
@@ -32,33 +36,33 @@ namespace subsystemManager {
 
 //
 
-namespace videoCapture {
+namespace frameCapture {
 /// @brief
-class VideoCapture : public Subsystem {
+class FrameCapture : public Subsystem {
 public:
   /// @brief Деструктор.
-  ~VideoCapture() = default;
+  ~FrameCapture() = default;
 
   /// @brief
   /// @return
-  static VideoCapture *getInstance() {
+  static FrameCapture *getInstance() {
     return instance_;
   }
 
 private:
   /// @brief Конструктор.
-  VideoCapture();
+  FrameCapture();
 
-  VideoCapture &operator=(const VideoCapture &) = delete;
-  VideoCapture(const VideoCapture &) = delete;
+  FrameCapture &operator=(const FrameCapture &) = delete;
+  FrameCapture(const FrameCapture &) = delete;
 
   /// @brief Дружественный класс.
   friend class subsystemManager::SubsystemManager;
 
   /// @brief Инициализация подсистемы.
   void init() override {
-    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::VideoCapture);
-    SET_SUBSYSTEM_NAME("VideoCapture");
+    SET_SUBSYSTEM_ID(subsystemManager::SubsystemId::FrameCapture);
+    SET_SUBSYSTEM_NAME("FrameCapture");
   }
 
   /// @brief Предварительная настройка перед запуском подсистемы.
@@ -67,7 +71,7 @@ private:
   void setBeforeShutDown() override {}
 
   /// @brief
-  void prepareBeforeStartVideCapture();
+  void prepareBeforeStartFrameCapture();
 
   /// @brief Тело процесса.
   void processBody() override;
@@ -77,12 +81,15 @@ private:
 
 private:
   /// @brief
-  static inline VideoCapture *instance_;
+  static inline FrameCapture *instance_;
 
   /// @brief
   std::unique_ptr<cv::VideoCapture> videoCapture_;
 
   /// @brief
-  std::thread videoCaptureThread_;
+  std::thread frameCaptureThread_;
+
+  /// @brief
+  std::shared_ptr<FrameBuffer> frameBuffer_;
 };
-} // namespace videoCapture
+} // namespace frameCapture

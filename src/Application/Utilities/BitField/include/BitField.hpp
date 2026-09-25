@@ -27,12 +27,8 @@ using bitSubfield_t = uint64_t;
 #define SUBFIELD(name, size)                                                   \
   bitSubfield_t name : (static_assert(size <= sizeof(bitSubfield_t) * 8));
 
-//
-
 #define MAKE_BIT_FIELD_NAME(id) bitField_##id
 #define GET_BIT_FIELD_NAME(id) bitField_##id
-
-//
 
 /// @brief Битовое пое с ожидаемым размером.
 /// @param id Идентификатор.
@@ -78,8 +74,6 @@ using bitSubfield_t = uint64_t;
     };                                                                         \
   } MAKE_BIT_FIELD_NAME(id);                                                   \
   static_assert(sizeof(GET_BIT_FIELD_NAME(id)) == expectedSize)
-
-//
 
 /// @brief Возвращает битовое поле по идентификатору.
 /// @param id Идентификатор.

@@ -326,6 +326,9 @@ void Inference::run() {
 bool Inference::body() {
   STATIC_BIT_FIELD(0, 1, FLAG(isStarted)); // Статическое битовое поле.
 
+  // Блокировка потока до захвата кадра.
+  frameBuffer_->pop();
+
   // Запуск конвейера.
   pipeline();
 

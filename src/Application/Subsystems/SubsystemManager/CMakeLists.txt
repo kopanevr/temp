@@ -6,7 +6,7 @@ target_include_directories(
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Subsystem/include
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Logger/include
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/EventDispatcher/include
-  ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/VideoCapture/include
+  ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/FrameCapture/include
   ${CMAKE_SOURCE_DIR}/src/Application/Subsystems/Inference/include
 )
 
@@ -14,7 +14,7 @@ target_link_libraries(
   SubsystemManager PRIVATE
   Logger
   EventDispatcher
-  VideoCapture
+  FrameCapture
 )
 
 target_link_libraries(
