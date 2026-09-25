@@ -7,8 +7,8 @@
 
 //
 
-#include <thread>
 #include <memory>
+#include <thread>
 
 //
 
@@ -31,7 +31,7 @@
 //
 
 namespace subsystemManager {
-  class SubsystemManager;
+class SubsystemManager;
 }
 
 //
@@ -45,13 +45,11 @@ public:
 
   /// @brief
   /// @return
-  static FrameCapture *getInstance() {
-    return instance_;
-  }
+  static FrameCapture *getInstance() { return instance_; }
 
 private:
   /// @brief Конструктор.
-  FrameCapture();
+  FrameCapture(std::shared_ptr<FrameBuffer> frameBuffer);
 
   FrameCapture &operator=(const FrameCapture &) = delete;
   FrameCapture(const FrameCapture &) = delete;

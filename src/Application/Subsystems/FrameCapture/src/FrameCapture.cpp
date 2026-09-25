@@ -7,7 +7,8 @@ using namespace frameCapture;
 //
 
 /// @brief Конструктор.
-FrameCapture::FrameCapture() {
+FrameCapture::FrameCapture(std::shared_ptr<FrameBuffer> frameBuffer)
+    : frameBuffer_(frameBuffer) {
   // Инициализация.
   init();
 }
@@ -20,8 +21,6 @@ void FrameCapture::setBeforeStartUp() {
 
 /// @brief
 void FrameCapture::prepareBeforeStartFrameCapture() {
-  frameBuffer_ =
-
   videoCapture_.reset(new (std::nothrow) cv::VideoCapture());
   if (!videoCapture_) {
     return;
@@ -55,9 +54,8 @@ void FrameCapture::processBody() {
 
 /// @brief
 void FrameCapture::run() {
-
-  while () {
-    if (!videoCapture_->read()) {
+  while (true) {
+    if (true) {
     }
   }
 }

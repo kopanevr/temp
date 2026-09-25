@@ -70,8 +70,13 @@ public:
       i++;
     }
 
+    std::shared_ptr<frameCapture::FrameBuffer> frameBuffer(new (std::nothrow) frameCapture::FrameBuffer());
+    if (!frameBuffer) {
+      return;
+    }
+
     if (i < subsystemCount_) {
-      subsystems_[i].reset(new (std::nothrow) frameCapture::FrameCapture());
+      subsystems_[i].reset(new (std::nothrow) frameCapture::FrameCapture(frameBuffer));
       if (!subsystems_[i]) {
         return;
       }
