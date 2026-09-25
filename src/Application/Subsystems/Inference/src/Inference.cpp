@@ -22,8 +22,9 @@ using namespace inference;
 //
 
 /// @brief Конструктор.
-Inference::Inference()
-    : eventDispatcher_(eventDispatcher::EventDispatcher::getInstance()) {
+Inference::Inference(std::shared_ptr<frameCapture::FrameBuffer> frameBuffer)
+    : eventDispatcher_(eventDispatcher::EventDispatcher::getInstance()),
+      frameBuffer_(frameBuffer) {
   // Инициализация.
   init();
 }

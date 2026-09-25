@@ -85,7 +85,7 @@ public:
     }
 
     if (i < subsystemCount_) {
-      subsystems_[i].reset(new (std::nothrow) inference::Inference());
+      subsystems_[i].reset(new (std::nothrow) inference::Inference(frameBuffer));
       if (!subsystems_[i]) {
         return;
       }

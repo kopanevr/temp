@@ -56,7 +56,7 @@ public:
 
 private:
   /// @brief Конструктор.
-  Inference();
+  Inference(std::shared_ptr<frameCapture::FrameBuffer> frameBuffer);
 
   Inference &operator=(const Inference &) = delete;
   Inference(const Inference &) = delete;
