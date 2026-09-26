@@ -13,7 +13,7 @@ using namespace eventDispatcher;
 /// @warning
 /// @return Результат подписки.
 bool EventDispatcher::subscribe(const SubscriptionID id, EventHandler handler) {
-  std::unique_lock<std::shared_mutex> lock(subscribeMutex_);
+  std::lock_guard<std::shared_mutex> lock(subscribeMutex_);
   if (subscriptionCount_ >= MAX_SUBSCRIPTIONS) {
     assert(false);
     return false;
@@ -34,7 +34,7 @@ bool EventDispatcher::subscribe(const SubscriptionID id, EventHandler handler) {
 /// @param id Идентификатор подписки.
 /// @param handler Обработчик подписки.
 void EventDispatcher::unsubscribe(const SubscriptionID id) {
-  std::unique_lock<std::shared_mutex> lock(subscribeMutex_);
+  std::lock_guard<std::shared_mutex> lock(subscribeMutex_);
   for (size_t i = 0; i < subscriptionCount_; i++) {
     if (subscriptionBuffer_[i].id == id) {
       if (i < subscriptionCount_ - 1) {

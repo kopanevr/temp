@@ -31,7 +31,7 @@ public:
   /// @brief
   /// @param frame
   void push(const cv::Mat &frame) {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     SET_FLAG(0, isFramePushed);
     cv_.notify_one();
@@ -39,7 +39,7 @@ public:
 
   /// @brief
   void pop(cv::Mat &frame) {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
     cv_.wait(lock, [this] { return GET_FLAG_STATE(0, isFramePushed); });
 
     RESET_FLAG(0, isFramePushed);
